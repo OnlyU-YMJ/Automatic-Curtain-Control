@@ -158,12 +158,17 @@ int main(void)
   STM_EVAL_LEDOn(LED3);
   STM_EVAL_LEDOn(LED4);
 
-  /* Add your application code here
-     */
+  /* Set Pins */
+	setPA15and14_IPU();
+	uint8_t pin15;
+	
+	
 
   /* Infinite loop */
   while (1)
   {
+		pin15 = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_15);
+		printf("GPIO Pin 15 Input = %d", pin15);
   }
 }
 
