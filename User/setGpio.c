@@ -19,17 +19,14 @@ void setPA1_AIN ( void ) {
 
 /**
  * @brief		Delay the program.
- * @param 	u32		nCount
+ * @param 	nCount: Imprecise delay number.
  * @retval	None
  */
 void  Delay (u32 nCount)
 {
   for(; nCount != 0; nCount--);
 }
-		   
-//初始化ADC
-//这里我们仅以规则通道为例
-//我们默认将开启通道0~3
+
 /**
  * @brief		Initialize the ADC.
  * @param 	None
@@ -69,12 +66,11 @@ void  AdcInit(void)
 
 }				  
 
-//获得ADC值
-//ch:通道值 0~3
+
 /**
  * @brief		Get ADC value.
- * @param 	u8		ADC_Channel_x
- * @retval	u16		ADC conversion value.
+ * @param 	ch: Choose the ADC channel.
+ * @retval	ADC conversion value.
  */
 u16 GetAdc(u8 ch)   
 {
@@ -90,9 +86,9 @@ u16 GetAdc(u8 ch)
 
 /**
  * @brief		Get ADC average value.
- * @param 	u8		ADC_Channel_x
- * @param		u8		times
- * @retval	u16		ADC average value.
+ * @param 	ADC_Channel_x
+ * @param		times
+ * @retval	ADC average value.
  */
 u16 GetAdcAverage(u8 ch,u8 times)
 {
@@ -108,8 +104,8 @@ u16 GetAdcAverage(u8 ch,u8 times)
 
 /**
  * @brief		Get average lux value from analogue input pin PA0.
- * @param 	u16			Aver_Analogue_In
- * @retval	float		The average value of lux.
+ * @param 	Aver_Analogue_In: The average analogue input value.
+ * @retval	The average value of lux.
  */
 float CalAverageLux(u16 Aver_Analogue_In){
 	float avervolts, averamps, avermicroamps, averlux;
@@ -122,8 +118,8 @@ float CalAverageLux(u16 Aver_Analogue_In){
 
 /**
  * @brief		Get lux value from analogue input pin PA0.
- * @param 	u16			Analogue_In
- * @retval	float		The average value of lux.
+ * @param 	Analogue_In: The analogue input value.
+ * @retval	The average value of lux.
  */
 float CalLux(u16 Analogue_In){
 	float volts, amps, microamps, lux;
