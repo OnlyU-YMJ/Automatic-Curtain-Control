@@ -23,18 +23,23 @@
 #include "stm32f10x.h"
 
 /* Public Defines */
-#define temt6000 pa7
+#define temt6000 pa0
+#define avertemt6000 averpa0
 
 /* Global Variables */
-u16 pa0, aver;
+u16 pa0, averpa0;
 int isalive;
+float lux, averlux;
 
 /* Function Declaration */
 void AdcInit(void);
 void Delay(u32);
 u16 GetAdc(u8);
 u16 GetAdcAverage(u8, u8);
-	
+float CalAverageLux(u16);
+float CalLux(u16);
+
+
 /**
   * @brief  Main program.
   * @param  None
@@ -44,15 +49,19 @@ int main(void)
 {
 	/* Initialize */
 	AdcInit();
-	pa0 = 0;
-	aver = 0;
+	temt6000 = 0;
+	avertemt6000 = 0;
 	isalive = 0;
 
   /* Infinite loop */
   while (1)
   {
 		isalive++;
-		pa0 = GetAdc(ADC_Channel_1);
-		aver = GetAdcAverage(ADC_Channel_1, 10);
+		temt6000 = GetAdc(ADC_Channel_1);
+		avertemt6000 = GetAdcAverage(ADC_Channel_1, 100);
+		if(temt6000){
+			lux = CalLux(temt6000);
+			averlux = CalAverageLux(avertemt6000);
+		}
   }
 }

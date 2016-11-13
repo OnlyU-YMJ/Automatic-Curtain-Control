@@ -16,6 +16,7 @@ void setPA1_AIN ( void ) {
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
+
 /**
  * @brief		Delay the program.
  * @param 	u32		nCount
@@ -103,4 +104,32 @@ u16 GetAdcAverage(u8 ch,u8 times)
 		Delay(0xffff);
 	}
 	return temp_val/times;
+}
+
+/**
+ * @brief		Get average lux value from analogue input pin PA0.
+ * @param 	u16			Aver_Analogue_In
+ * @retval	float		The average value of lux.
+ */
+float CalAverageLux(u16 Aver_Analogue_In){
+	float avervolts, averamps, avermicroamps, averlux;
+	avervolts = Aver_Analogue_In * 5.0 / 1024.0;
+	averamps = avervolts / 10000.0;  // across 10,000 Ohms
+	avermicroamps = averamps * 1000000;
+	averlux = avermicroamps * 2.0;
+	return averlux;
+}
+
+/**
+ * @brief		Get lux value from analogue input pin PA0.
+ * @param 	u16			Analogue_In
+ * @retval	float		The average value of lux.
+ */
+float CalLux(u16 Analogue_In){
+	float volts, amps, microamps, lux;
+	volts = Analogue_In * 5.0 / 1024.0;
+	amps = volts / 10000.0;  // across 10,000 Ohms
+	microamps = amps * 1000000;
+	lux = microamps * 2.0;
+	return lux;
 }
