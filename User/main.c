@@ -28,8 +28,11 @@
 
 /* Global Variables */
 u16 pa0, averpa0;
-int isalive;
-float lux, averlux;
+int isalive;// The number shows whether STM32 is alive
+int Up_KeyStatus, Down_KeyStatus;// Keys status
+float k;// Scale factor K
+float lux, averlux;// Lux(lx) value
+uint8_t upStatus, downStatus;
 
 /* Function Declaration */
 void AdcInit(void);
@@ -38,25 +41,43 @@ u16 GetAdc(u8);
 u16 GetAdcAverage(u8, u8);
 float CalAverageLux(u16);
 float CalLux(u16);
+int KeyScan(GPIO_TypeDef*, u16);
+void setPA7_IPU(void);
+void setPA6_IPU(void);
 
 
 /**
-  * @brief  Main program.
-  * @param  None
-  * @retval None
-  */
+ * @brief  Main program.
+ * @param  None
+ * @retval None
+ */
 int main(void)
 {
 	/* Initialize */
 	AdcInit();
+	setPA7_IPU();
+	setPA6_IPU();
 	temt6000 = 0;
 	avertemt6000 = 0;
 	isalive = 0;
+	k = 0.6;
+	Up_KeyStatus = 0;
+	Down_KeyStatus = 0;
 
   /* Infinite loop */
   while (1)
   {
 		isalive++;
+		Up_KeyStatus = KeyScan(GPIOA, GPIO_Pin_7);
+		Down_KeyStatus = KeyScan(GPIOA, GPIO_Pin_6);
+		// Judge key value
+		if(Up_KeyStatus == Bit_RESET){
+			k+=0.1;
+		}
+		if(Down_KeyStatus == Bit_RESET){
+			k-=0.1;
+		}
+		// Get TEMT6000 output value
 		temt6000 = GetAdc(ADC_Channel_1);
 		avertemt6000 = GetAdcAverage(ADC_Channel_1, 100);
 		if(temt6000){

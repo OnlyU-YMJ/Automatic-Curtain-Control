@@ -1,7 +1,7 @@
 #include "stm32f10x.h"
 
 /**
- * @brief 	Set Port A bit 15 and 14 as analogue input.
+ * @brief 	Set PA1 pin at analogue input mode, 2MHz speed.
  * @param  	None
  * @retval 	None
  */
@@ -16,13 +16,40 @@ void setPA1_AIN ( void ) {
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
+/**
+ * @brief		Set PA7 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA7_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief		Set PA6 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA6_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
 
 /**
  * @brief		Delay the program.
  * @param 	nCount: Imprecise delay number.
  * @retval	None
  */
-void  Delay (u32 nCount)
+void Delay (u32 nCount)
 {
   for(; nCount != 0; nCount--);
 }
@@ -128,4 +155,26 @@ float CalLux(u16 Analogue_In){
 	microamps = amps * 1000000;
 	lux = microamps * 2.0;
 	return lux;
+}
+
+/**
+ * @brief		Check the key's status.[!Low voltage is valid!!!!]
+ * @param		GPIOx: GPIO fields(A~G)
+ * @param		GPIO_Pin: GPIO pin number(0~15)
+ * @retval	Return Bit_RESET is On, Bit_SET is OFF.
+ */
+uint8_t KeyScan(GPIO_TypeDef* GPIOx, u16 GPIO_Pin){
+	if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
+		Delay(500);// Delay to clear the jitter
+		if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
+			while(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == Bit_RESET);
+			return Bit_RESET;
+		}
+		else{
+			return Bit_SET;
+		}
+	}
+	else{
+		return Bit_SET;
+	}
 }
