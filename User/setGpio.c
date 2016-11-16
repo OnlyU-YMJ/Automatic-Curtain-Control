@@ -7,9 +7,7 @@
  */
 void setPA1_AIN ( void ) {
 	GPIO_InitTypeDef GPIO_InitStructure;
-	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); // Enable the peripheral clock
-	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1; // bin to be set
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; // Analogue input
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
@@ -45,13 +43,29 @@ void setPA6_IPU(void){
 }
 
 /**
+ * @brief		
+ * @param		
+ * @retval		
+ */
+void setPA5_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
  * @brief		Delay the program.
- * @param 	nCount: Imprecise delay number.
+ * @param 	nTime: Specifies the delay time length, in milliseconds.
  * @retval	None
  */
-void Delay (u32 nCount)
+static __IO uint32_t TimingDelay;
+void Delay (__IO uint32_t nTime)
 {
-  for(; nCount != 0; nCount--);
+  TimingDelay = nTime;
+	while(TimingDelay != 0);
 }
 
 /**
@@ -124,7 +138,7 @@ u16 GetAdcAverage(u8 ch,u8 times)
 	for(t=0;t<times;t++)
 	{
 		temp_val+=GetAdc(ch);
-		Delay(0xffff);
+		Delay(5);
 	}
 	return temp_val/times;
 }
@@ -161,13 +175,14 @@ float CalLux(u16 Analogue_In){
  * @brief		Check the key's status.[!Low voltage is valid!!!!]
  * @param		GPIOx: GPIO fields(A~G)
  * @param		GPIO_Pin: GPIO pin number(0~15)
- * @retval	Return Bit_RESET is On, Bit_SET is OFF.
+ * @retval	Return Bit_RESET is ON, Bit_SET is OFF.
  */
 uint8_t KeyScan(GPIO_TypeDef* GPIOx, u16 GPIO_Pin){
 	if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
-		Delay(500);// Delay to clear the jitter
+		Delay(50);// Delay to clear the jitter
 		if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
 			while(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == Bit_RESET);
+			Delay(5);
 			return Bit_RESET;
 		}
 		else{
@@ -176,5 +191,27 @@ uint8_t KeyScan(GPIO_TypeDef* GPIOx, u16 GPIO_Pin){
 	}
 	else{
 		return Bit_SET;
+	}
+}
+
+/**
+ * @brief		Initialize SysTick, and unit is milllisecond.
+ * @param		None
+ * @retval	None
+ */
+void SysTickInit(void){
+	if(SysTick_Config(SystemCoreClock / 1000)){
+		while(1);// Capture error
+	}
+}
+
+/**
+ * @brief		Decrements the TimingDelay variable.
+ * @param		None
+ * @retval	None
+ */
+void TimingDelay_Decrement(void){
+	if(TimingDelay != 0x00){
+		TimingDelay--;
 	}
 }

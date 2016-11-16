@@ -29,10 +29,10 @@
 /* Global Variables */
 u16 pa0, averpa0;
 int isalive;// The number shows whether STM32 is alive
-int Up_KeyStatus, Down_KeyStatus;// Keys status
+uint8_t Up_KeyStatus, Down_KeyStatus, Reset_KeyStatus;// Keys status
 float k;// Scale factor K
 float lux, averlux;// Lux(lx) value
-uint8_t upStatus, downStatus;
+
 
 /* Function Declaration */
 void AdcInit(void);
@@ -44,6 +44,8 @@ float CalLux(u16);
 int KeyScan(GPIO_TypeDef*, u16);
 void setPA7_IPU(void);
 void setPA6_IPU(void);
+void SysTickInit(void);
+void setPA5_IPU(void);
 
 
 /**
@@ -54,15 +56,18 @@ void setPA6_IPU(void);
 int main(void)
 {
 	/* Initialize */
+	SysTickInit();
 	AdcInit();
 	setPA7_IPU();
 	setPA6_IPU();
+	setPA5_IPU();
 	temt6000 = 0;
 	avertemt6000 = 0;
 	isalive = 0;
 	k = 0.6;
-	Up_KeyStatus = 0;
-	Down_KeyStatus = 0;
+	Up_KeyStatus = Bit_SET;
+	Down_KeyStatus = Bit_SET;
+	Reset_KeyStatus = Bit_SET;
 
   /* Infinite loop */
   while (1)
@@ -70,12 +75,16 @@ int main(void)
 		isalive++;
 		Up_KeyStatus = KeyScan(GPIOA, GPIO_Pin_7);
 		Down_KeyStatus = KeyScan(GPIOA, GPIO_Pin_6);
+		Reset_KeyStatus = KeyScan(GPIOA, GPIO_Pin_5);
 		// Judge key value
 		if(Up_KeyStatus == Bit_RESET){
-			k+=0.1;
+			k += 0.1;// k incresements
 		}
 		if(Down_KeyStatus == Bit_RESET){
-			k-=0.1;
+			k -= 0.1;// k decresemets
+		}
+		if(Reset_KeyStatus == Bit_RESET){
+			k = 0.6;// Reset
 		}
 		// Get TEMT6000 output value
 		temt6000 = GetAdc(ADC_Channel_1);
