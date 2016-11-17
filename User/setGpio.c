@@ -215,3 +215,40 @@ void TimingDelay_Decrement(void){
 		TimingDelay--;
 	}
 }
+
+/**
+ * @brief		Initialize the EXTI(External Interrupt).
+ * @param		None
+ * @retval	None
+ */
+void EXTIInit(void){
+	void NVICInit(void);
+	EXTI_InitTypeDef EXTI_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);// Enable the AFIO clock
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
+	
+	// Configure EXTI line 5, 6, 7
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
+	
+	NVICInit();
+}
+
+/**
+ * @brief		Initialize the NVIC(Nested Vector Interrupt Controller).
+ * @param		None
+ * @retval	None
+ */
+void NVICInit(void){
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;// The highest sub priority
+	NVIC_Init(&NVIC_InitStructure);
+}

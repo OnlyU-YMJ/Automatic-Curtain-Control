@@ -46,6 +46,7 @@ void setPA7_IPU(void);
 void setPA6_IPU(void);
 void SysTickInit(void);
 void setPA5_IPU(void);
+void EXTIInit(void);
 
 
 /**
@@ -56,11 +57,15 @@ void setPA5_IPU(void);
 int main(void)
 {
 	/* Initialize */
-	SysTickInit();
-	AdcInit();
+	// Initialize the pins.
 	setPA7_IPU();
 	setPA6_IPU();
 	setPA5_IPU();
+	// Initialize the alternative functions.
+	EXTIInit();
+	SysTickInit();
+	AdcInit();
+	// Initialize the parameters.
 	temt6000 = 0;
 	avertemt6000 = 0;
 	isalive = 0;
@@ -77,7 +82,7 @@ int main(void)
 		Down_KeyStatus = KeyScan(GPIOA, GPIO_Pin_6);
 		Reset_KeyStatus = KeyScan(GPIOA, GPIO_Pin_5);
 		// Judge key value
-		if(Up_KeyStatus == Bit_RESET){
+		/*if(Up_KeyStatus == Bit_RESET){
 			k += 0.1;// k incresements
 		}
 		if(Down_KeyStatus == Bit_RESET){
@@ -85,7 +90,7 @@ int main(void)
 		}
 		if(Reset_KeyStatus == Bit_RESET){
 			k = 0.6;// Reset
-		}
+		}*/
 		// Get TEMT6000 output value
 		temt6000 = GetAdc(ADC_Channel_1);
 		avertemt6000 = GetAdcAverage(ADC_Channel_1, 100);

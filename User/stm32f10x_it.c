@@ -136,8 +136,7 @@ void PendSV_Handler(void)
   */
 
 void SysTick_Handler(void)
-{
-	
+{	
 	TimingDelay_Decrement();
 }
 
@@ -163,3 +162,32 @@ void SysTick_Handler(void)
 
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+
+void Delay_Stupid(int number){
+	for(; number != 0; number--);
+}
+
+/**
+ * @brief		This function handles external interrupt.
+ * @param		None
+ * @retval	None
+ */
+extern float k;
+extern void Delay (__IO uint32_t nTime);
+void EXTI9_5_IRQHandler(void){
+	if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
+		k += 0.1;
+		Delay_Stupid(7000000);
+		EXTI_ClearITPendingBit(EXTI_Line7);
+	}
+	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
+		k -= 0.1;
+		Delay_Stupid(7000000);
+		EXTI_ClearITPendingBit(EXTI_Line6);
+	}
+	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
+		k = 0.6;
+		Delay_Stupid(50000);
+		EXTI_ClearITPendingBit(EXTI_Line5);
+	}
+}
