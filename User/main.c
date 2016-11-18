@@ -78,11 +78,11 @@ int main(void)
   while (1)
   {
 		isalive++;
-		Up_KeyStatus = KeyScan(GPIOA, GPIO_Pin_7);
+		/*Up_KeyStatus = KeyScan(GPIOA, GPIO_Pin_7);
 		Down_KeyStatus = KeyScan(GPIOA, GPIO_Pin_6);
 		Reset_KeyStatus = KeyScan(GPIOA, GPIO_Pin_5);
 		// Judge key value
-		/*if(Up_KeyStatus == Bit_RESET){
+		if(Up_KeyStatus == Bit_RESET){
 			k += 0.1;// k incresements
 		}
 		if(Down_KeyStatus == Bit_RESET){

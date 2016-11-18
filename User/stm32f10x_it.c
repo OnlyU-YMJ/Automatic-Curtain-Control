@@ -160,7 +160,21 @@ void SysTick_Handler(void)
   * @}
   */ 
 
-
+void delay_ms(uint16_t  MS){
+  uint32_t temp_load,temp_ctrl=0;
+	temp_load = MS*(72000000/1000);
+	SysTick->LOAD = (temp_load & SysTick_LOAD_RELOAD_Msk)-1;
+	SysTick->VAL = 0;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+	                 SysTick_CTRL_TICKINT_Msk |
+	                 SysTick_CTRL_ENABLE_Msk ;
+	do{
+		  temp_ctrl = SysTick->CTRL;
+    }while(temp_ctrl&0x01&&!(temp_ctrl & SysTick_CTRL_COUNTFLAG_Msk));
+		
+		SysTick->CTRL &=~(SysTick_CTRL_ENABLE_Msk |SysTick_CTRL_TICKINT_Msk);
+		SysTick->VAL = 0;
+}
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 
 void Delay_Stupid(int number){
@@ -177,17 +191,20 @@ extern void Delay (__IO uint32_t nTime);
 void EXTI9_5_IRQHandler(void){
 	if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
 		k += 0.1;
-		Delay_Stupid(7000000);
+		//Delay_Stupid(7000000);
+		delay_ms(2000);
 		EXTI_ClearITPendingBit(EXTI_Line7);
 	}
 	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
 		k -= 0.1;
-		Delay_Stupid(7000000);
+		//Delay_Stupid(7000000);
+		delay_ms(2000);
 		EXTI_ClearITPendingBit(EXTI_Line6);
 	}
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
 		k = 0.6;
-		Delay_Stupid(50000);
+		delay_ms(2000);
+		//Delay_Stupid(50000);
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}
 }

@@ -64,8 +64,10 @@ void setPA5_IPU(void){
 static __IO uint32_t TimingDelay;
 void Delay (__IO uint32_t nTime)
 {
+	//SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;// Enable the systick.
   TimingDelay = nTime;
 	while(TimingDelay != 0);
+	//SysTick->CTRL &= SysTick_CTRL_ENABLE_Msk;// Disable the systick.
 }
 
 /**
@@ -138,7 +140,8 @@ u16 GetAdcAverage(u8 ch,u8 times)
 	for(t=0;t<times;t++)
 	{
 		temp_val+=GetAdc(ch);
-		Delay(5);
+		//Delay(5);
+		delay_ms(5);
 	}
 	return temp_val/times;
 }
@@ -203,6 +206,8 @@ void SysTickInit(void){
 	if(SysTick_Config(SystemCoreClock / 1000)){
 		while(1);// Capture error
 	}
+	//NVIC_SetPriority(SysTick_IRQn, 0);
+	//SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;//Unable the systick.
 }
 
 /**
@@ -246,9 +251,16 @@ void EXTIInit(void){
  */
 void NVICInit(void){
 	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;// The highest sub priority
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
 	NVIC_Init(&NVIC_InitStructure);
+	
+//	NVIC_InitStructure.NVIC_IRQChannel = SysTick_IRQn;
+//	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority
+//	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;// The highest sub priority
+//	NVIC_Init(&NVIC_InitStructure);
 }
