@@ -157,9 +157,10 @@ void SysTick_Handler(void)
 }*/
 
 /**
-  * @}
-  */ 
-
+ * @brief			This function delays the program, in millisecond.
+ * @param 		MS: The number of millisecond.
+ * @retval		None
+ */
 void delay_ms(uint16_t  MS){
   uint32_t temp_load,temp_ctrl=0;
 	temp_load = MS*(72000000/1000);
@@ -177,6 +178,11 @@ void delay_ms(uint16_t  MS){
 }
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 
+/**
+ * @brief			This function delays the program.(STUPID Version).
+ * @param 		None
+ * @retval		None
+ */
 void Delay_Stupid(int number){
 	for(; number != 0; number--);
 }
@@ -192,18 +198,18 @@ void EXTI9_5_IRQHandler(void){
 	if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
 		k += 0.1;
 		//Delay_Stupid(7000000);
-		delay_ms(2000);
+		delay_ms(10000);
 		EXTI_ClearITPendingBit(EXTI_Line7);
 	}
 	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
 		k -= 0.1;
 		//Delay_Stupid(7000000);
-		delay_ms(2000);
+		delay_ms(8000);
 		EXTI_ClearITPendingBit(EXTI_Line6);
 	}
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
 		k = 0.6;
-		delay_ms(2000);
+		delay_ms(5000);
 		//Delay_Stupid(50000);
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}

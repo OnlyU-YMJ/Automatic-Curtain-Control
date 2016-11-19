@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F10x_StdPeriph_Template/main.c 
+  * @file    Project/STM32F10x_StdPeriph_Template/main.c
   * @author  MCD Application Team
   * @version V3.5.0
   * @date    08-April-2011
@@ -31,6 +31,7 @@ u16 pa0, averpa0;
 int isalive;// The number shows whether STM32 is alive
 uint8_t Up_KeyStatus, Down_KeyStatus, Reset_KeyStatus;// Keys status
 float k;// Scale factor K
+int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
 
 
@@ -47,7 +48,15 @@ void setPA6_IPU(void);
 void SysTickInit(void);
 void setPA5_IPU(void);
 void EXTIInit(void);
-
+void setPB0_7_OPP(void);
+void setPB10_11_OPP(void);
+void LEDSD_Test(void);
+void setPA11_12_OPP(void);
+void LEDSD_X(int);
+void delay_ms(uint16_t);
+void LEDSD_UP(void);
+void LEDSD_DP(void);
+void LEDSD_CLEAR(void);
 
 /**
  * @brief  Main program.
@@ -61,10 +70,14 @@ int main(void)
 	setPA7_IPU();
 	setPA6_IPU();
 	setPA5_IPU();
+	setPB0_7_OPP();
+	setPB10_11_OPP();
+	setPA11_12_OPP();
 	// Initialize the alternative functions.
 	EXTIInit();
 	SysTickInit();
 	AdcInit();
+	LEDSD_Test();
 	// Initialize the parameters.
 	temt6000 = 0;
 	avertemt6000 = 0;
@@ -78,19 +91,6 @@ int main(void)
   while (1)
   {
 		isalive++;
-		/*Up_KeyStatus = KeyScan(GPIOA, GPIO_Pin_7);
-		Down_KeyStatus = KeyScan(GPIOA, GPIO_Pin_6);
-		Reset_KeyStatus = KeyScan(GPIOA, GPIO_Pin_5);
-		// Judge key value
-		if(Up_KeyStatus == Bit_RESET){
-			k += 0.1;// k incresements
-		}
-		if(Down_KeyStatus == Bit_RESET){
-			k -= 0.1;// k decresemets
-		}
-		if(Reset_KeyStatus == Bit_RESET){
-			k = 0.6;// Reset
-		}*/
 		// Get TEMT6000 output value
 		temt6000 = GetAdc(ADC_Channel_1);
 		avertemt6000 = GetAdcAverage(ADC_Channel_1, 100);
@@ -98,5 +98,15 @@ int main(void)
 			lux = CalLux(temt6000);
 			averlux = CalAverageLux(avertemt6000);
 		}
+		k_up = k / 1;
+		k_dp = (int)(k * 10) % 10;
+		LEDSD_CLEAR();
+		LEDSD_UP();
+		LEDSD_X(k_up);
+		delay_ms(10);
+		LEDSD_CLEAR();
+		LEDSD_DP();
+		LEDSD_X(k_dp);
+		delay_ms(10);
   }
 }
