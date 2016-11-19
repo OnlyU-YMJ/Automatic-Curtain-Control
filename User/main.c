@@ -21,25 +21,30 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
-
+#include "math.h"
 /* Public Defines */
 #define temt6000 pa0
 #define avertemt6000 averpa0
+#define irs pa1
+#define averirs averpa1
 
 /* Global Variables */
 u16 pa0, averpa0;
+u16 pa1, averpa1;
 int isalive;// The number shows whether STM32 is alive
-uint8_t Up_KeyStatus, Down_KeyStatus, Reset_KeyStatus;// Keys status
 float k;// Scale factor K
 int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
-
+float length, averlength;
+//y=-5.648*x^3+35.42*x^2-82.44*x+80.52
 
 /* Function Declaration */
 void AdcInit(void);
 void Delay(u32);
-u16 GetAdc(u8);
-u16 GetAdcAverage(u8, u8);
+u16 GetAdc1(u8);
+u16 GetAdc2(u8);
+u16 GetAdc1Average(u8, u8);
+u16 GetAdc2Average(u8, u8);
 float CalAverageLux(u16);
 float CalLux(u16);
 int KeyScan(GPIO_TypeDef*, u16);
@@ -57,6 +62,10 @@ void delay_ms(uint16_t);
 void LEDSD_UP(void);
 void LEDSD_DP(void);
 void LEDSD_CLEAR(void);
+void PWMInit(void);
+float CalLength(u16);
+float CalAverageLength(u16);
+
 
 /**
  * @brief  Main program.
@@ -78,25 +87,35 @@ int main(void)
 	SysTickInit();
 	AdcInit();
 	LEDSD_Test();
+	// PWMInit();
+	// Motor_Init(10000,1000,1);
 	// Initialize the parameters.
 	temt6000 = 0;
 	avertemt6000 = 0;
 	isalive = 0;
 	k = 0.6;
-	Up_KeyStatus = Bit_SET;
-	Down_KeyStatus = Bit_SET;
-	Reset_KeyStatus = Bit_SET;
+	length = 0;
+	averlength = 0;
 
   /* Infinite loop */
-  while (1)
-  {
+	  while (1){
 		isalive++;
 		// Get TEMT6000 output value
-		temt6000 = GetAdc(ADC_Channel_1);
-		avertemt6000 = GetAdcAverage(ADC_Channel_1, 100);
+		ADC_Cmd(ADC2, DISABLE);
+		ADC_Cmd(ADC1, ENABLE);
+		temt6000 = GetAdc1(ADC_Channel_1);
+		avertemt6000 = GetAdc1Average(ADC_Channel_1, 100);
+		ADC_Cmd(ADC1, DISABLE);
+		ADC_Cmd(ADC2, ENABLE);
+		irs = GetAdc2(ADC_Channel_2);
+		averirs = GetAdc2Average(ADC_Channel_2, 1000);
 		if(temt6000){
 			lux = CalLux(temt6000);
 			averlux = CalAverageLux(avertemt6000);
+		}
+		if(irs){
+			length = CalLength(irs);
+			averlength = CalAverageLength(averirs);
 		}
 		k_up = k / 1;
 		k_dp = (int)(k * 10) % 10;
@@ -108,5 +127,6 @@ int main(void)
 		LEDSD_DP();
 		LEDSD_X(k_dp);
 		delay_ms(10);
-  }
+	 	// TIM2_TIM3_PWM(1000,10);
+	}
 }

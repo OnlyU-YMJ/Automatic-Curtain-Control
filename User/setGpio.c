@@ -1,7 +1,7 @@
 #include "stm32f10x.h"
-
+#include "math.h"
 /**
- * @brief 	Set PA1 pin at analogue input mode, 2MHz speed.
+ * @brief 	Set PA.01 pin at analogue input mode, 2MHz speed.
  * @param  	None
  * @retval 	None
  */
@@ -11,6 +11,20 @@ void setPA1_AIN ( void ) {
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1; // bin to be set
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; // Analogue input
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief 	Set PA.02 pin at analogue input mode, 2MHz speed.
+ * @param  	None
+ * @retval 	None
+ */
+void setPA2_AIN ( void ) {
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); // Enable the peripheral clock
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2; // bin to be set
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; // Analogue input
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
@@ -107,6 +121,8 @@ void setPA11_12_OPP(void){
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
+
+
 /**
  * @brief		Delay the program.
  * @param 	nTime: Specifies the delay time length, in milliseconds.
@@ -122,7 +138,7 @@ void Delay (__IO uint32_t nTime)
 }
 
 /**
- * @brief		Initialize the ADC.
+ * @brief		Initialize the ADC1 & ADC2.
  * @param 	None
  * @retval	None
  */
@@ -130,82 +146,130 @@ void  AdcInit(void)
 {
 	ADC_InitTypeDef ADC_InitStructure;
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE );	  //使锟斤拷ADC1通锟斤拷时锟斤拷
-	RCC_ADCCLKConfig(RCC_PCLK2_Div6);   //锟斤拷锟斤拷ADC锟斤拷频锟斤拷锟斤拷6 72M/6=12,ADC锟斤拷锟斤拷时锟戒不锟杰筹拷锟斤拷14M
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2, ENABLE );
+	RCC_ADCCLKConfig(RCC_PCLK2_Div6);
 
-	//PA7 锟斤拷为模锟斤拷通锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	setPA1_AIN();
+	setPA2_AIN();
 
-	ADC_DeInit(ADC1);  //锟斤拷位ADC1,锟斤拷锟斤拷锟斤拷 ADC1 锟斤拷全锟斤拷锟侥达拷锟斤拷锟斤拷锟斤拷为缺省值
+	ADC_DeInit(ADC1);
+	ADC_DeInit(ADC2);
 
-	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;	//ADC锟斤拷锟斤拷模式:ADC1锟斤拷ADC2锟斤拷锟斤拷锟节讹拷锟斤拷模式
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;	//模锟斤拷转锟斤拷锟斤拷锟斤拷锟节碉拷通锟斤拷模式
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;	//模锟斤拷转锟斤拷锟斤拷锟斤拷锟节碉拷锟斤拷转锟斤拷模式
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;	//转锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟解部锟斤拷锟斤拷锟斤拷锟斤拷
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	//ADC锟斤拷锟斤拷锟揭讹拷锟斤拷
-	ADC_InitStructure.ADC_NbrOfChannel = 1;	//顺锟斤拷锟斤拷锟叫癸拷锟斤拷转锟斤拷锟斤拷ADC通锟斤拷锟斤拷锟斤拷目
-	ADC_Init(ADC1, &ADC_InitStructure);	//锟斤拷锟斤拷ADC_InitStruct锟斤拷指锟斤拷锟侥诧拷锟斤拷锟斤拷始锟斤拷锟斤拷锟斤拷ADCx锟侥寄达拷锟斤拷
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfChannel = 1;
+	ADC_Init(ADC1, &ADC_InitStructure);
 
-	ADC_Cmd(ADC1, ENABLE);	//使锟斤拷指锟斤拷锟斤拷ADC1
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfChannel = 1;
+	ADC_Init(ADC2, &ADC_InitStructure);
 
-	ADC_ResetCalibration(ADC1);	//使锟杰革拷位校准
-
-	while(ADC_GetResetCalibrationStatus(ADC1));	//锟饺达拷锟斤拷位校准锟斤拷锟斤拷
-
-	ADC_StartCalibration(ADC1);	 //锟斤拷锟斤拷AD校准
-
-	while(ADC_GetCalibrationStatus(ADC1));	 //锟饺达拷校准锟斤拷锟斤拷
-
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//使锟斤拷指锟斤拷锟斤拷ADC1锟斤拷锟斤拷锟斤拷转锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
-
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_ResetCalibration(ADC1);
+	while(ADC_GetResetCalibrationStatus(ADC1));
+	ADC_StartCalibration(ADC1);
+	while(ADC_GetCalibrationStatus(ADC1));
+	// ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+	// ADC_Cmd(ADC1, DISABLE);
+	ADC_Cmd(ADC2, ENABLE);
+	ADC_ResetCalibration(ADC2);
+	while(ADC_GetResetCalibrationStatus(ADC2));
+	ADC_StartCalibration(ADC2);
+	while(ADC_GetCalibrationStatus(ADC2));
+	// ADC_SoftwareStartConvCmd(ADC2, ENABLE);
+	// ADC_Cmd(ADC2, DISABLE);
 }
 
 
 /**
- * @brief		Get ADC value.
+ * @brief		Get ADC1 value.
  * @param 	ch: Choose the ADC channel.
  * @retval	ADC conversion value.
  */
-u16 GetAdc(u8 ch)
-{
-  	//锟斤拷锟斤拷指锟斤拷ADC锟侥癸拷锟斤拷锟斤拷通锟斤拷锟斤拷一锟斤拷锟斤拷锟叫ｏ拷锟斤拷锟斤拷时锟斤拷
-	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5 );	//ADC1,ADC通锟斤拷,锟斤拷锟斤拷时锟斤拷为239.5锟斤拷锟斤拷
-
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//使锟斤拷指锟斤拷锟斤拷ADC1锟斤拷锟斤拷锟斤拷转锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
-
-	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));//锟饺达拷转锟斤拷锟斤拷锟斤拷
-
-	return ADC_GetConversionValue(ADC1);	//锟斤拷锟斤拷锟斤拷锟斤拷一锟斤拷ADC1锟斤拷锟斤拷锟斤拷锟斤拷转锟斤拷锟斤拷锟斤拷
+u16 GetAdc1(u8 ch){
+	u16 temp;
+	// ADC_Cmd(ADC1, ENABLE);
+	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5 );
+	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));
+	temp = ADC_GetConversionValue(ADC1);
+	// ADC_Cmd(ADC1, DISABLE);
+	return temp;
 }
 
 /**
- * @brief		Get ADC average value.
+ * @brief	Get ADC2 value.
+ * @param 	ch: Choose the ADC channel.
+ * @retval	ADC conversion value.
+ */
+u16 GetAdc2(u8 ch){
+	// ADC_Cmd(ADC2, ENABLE);
+	u16 temp;
+	ADC_RegularChannelConfig(ADC2, ch, 1, ADC_SampleTime_239Cycles5 );
+	ADC_SoftwareStartConvCmd(ADC2, ENABLE);
+	while(!ADC_GetFlagStatus(ADC2, ADC_FLAG_EOC ));
+	temp = ADC_GetConversionValue(ADC2);
+	// ADC_Cmd(ADC2, DISABLE);
+	return temp;
+}
+
+/**
+ * @brief		Get ADC1 average value.
  * @param 	ADC_Channel_x
  * @param		times
- * @retval	ADC average value.
+ * @retval	ADC1 average value.
  */
-u16 GetAdcAverage(u8 ch,u8 times)
-{
+u16 GetAdc1Average(u8 ch,u8 times){
+	// ADC_Cmd(ADC1, ENABLE);
 	void delay_ms(uint16_t  MS);
 	u32 temp_val=0;
 	u8 t;
 	for(t=0;t<times;t++)
 	{
-		temp_val+=GetAdc(ch);
+		temp_val+=GetAdc1(ch);
 		//Delay(5);
 		//delay_ms(5);
 	}
+	// ADC_Cmd(ADC1, DISABLE);
 	return temp_val/times;
 }
 
 /**
- * @brief		Get average lux value from analogue input pin PA0.
+ * @brief		Get ADC1 average value.
+ * @param 	ADC_Channel_x
+ * @param		times
+ * @retval	ADC2 average value.
+ */
+u16 GetAdc2Average(u8 ch,u8 times){
+	// ADC_Cmd(ADC2, ENABLE);
+	void delay_ms(uint16_t  MS);
+	u32 temp_val=0;
+	u8 t;
+	for(t=0;t<times;t++)
+	{
+		temp_val+=GetAdc2(ch);
+		//Delay(5);
+		//delay_ms(5);
+	}
+	// ADC_Cmd(ADC2, DISABLE);
+	return temp_val/times;
+}
+
+/**
+ * @brief		Get average lux value from analogue input pin PA1.
  * @param 	Aver_Analogue_In: The average analogue input value.
  * @retval	The average value of lux.
  */
 float CalAverageLux(u16 Aver_Analogue_In){
 	float avervolts, averamps, avermicroamps, averlux;
-	avervolts = Aver_Analogue_In * 5.0 / 1024.0;
+	avervolts = Aver_Analogue_In * 3.3 / 4096.0;
 	averamps = avervolts / 10000.0;  // across 10,000 Ohms
 	avermicroamps = averamps * 1000000;
 	averlux = avermicroamps * 2.0;
@@ -213,17 +277,41 @@ float CalAverageLux(u16 Aver_Analogue_In){
 }
 
 /**
- * @brief		Get lux value from analogue input pin PA0.
+ * @brief		Get lux value from analogue input pin PA1.
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
 float CalLux(u16 Analogue_In){
 	float volts, amps, microamps, lux;
-	volts = Analogue_In * 5.0 / 1024.0;
+	volts = Analogue_In * 3.3 / 4096.0;
 	amps = volts / 10000.0;  // across 10,000 Ohms
 	microamps = amps * 1000000;
 	lux = microamps * 2.0;
 	return lux;
+}
+
+/**
+ * @brief		Get length from analogue input pin PA2.
+ * @param 	Analogue_In: The analogue input value.
+ * @retval	The average value of lux.
+ */
+float CalLength(u16 Analogue_In){
+	float volts, length;
+	volts = Analogue_In * 3.3 / 4096.0;
+	length = -5.648*pow(volts,3)+35.42*pow(volts,2)-82.44*volts+80.52;
+	return length;
+}
+
+/**
+ * @brief		Get average lux value from analogue input pin PA1.
+ * @param 	Aver_Analogue_In: The average analogue input value.
+ * @retval	The average value of lux.
+ */
+float CalAverageLength(u16 Aver_Analogue_In){
+	float avervolts, averlength;
+	avervolts = Aver_Analogue_In * 3.3 / 4096.0;
+	averlength = -5.648*pow(avervolts,3)+35.42*pow(avervolts,2)-82.44*avervolts+80.52;
+	return averlength;
 }
 
 /**
@@ -580,3 +668,120 @@ void LEDSD_CLEAR(void){
 	GPIO_ResetBits(GPIOB, LED_CC | LED_CD | LED_LU | LED_LD | LED_RD | LED_POINT);
 	GPIO_ResetBits(GPIOA, LED_CU | LED_RU);
 }
+
+/* Infrared Ranging Sensor*/
+
+
+
+/* Motor */
+void PWMInit(void)
+{
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+  TIM_OCInitTypeDef TIM_OCInitStruct;
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
+  //GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
+
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;//PA0
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA,&GPIO_InitStruct);
+
+  //TIM2???????
+  TIM_TimeBaseInitStruct.TIM_ClockDivision = 0;//??????
+  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 0;//????,?100us????
+  TIM_TimeBaseInitStruct.TIM_Period = 10000;//???
+  TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
+
+  TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
+  TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
+  TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
+
+  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
+  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
+  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
+  TIM_OCInitStruct.TIM_Pulse = 990;//????1?????
+  TIM_OC1Init(TIM2,&TIM_OCInitStruct);
+  TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
+  TIM_ARRPreloadConfig(TIM2, ENABLE);
+
+  TIM_Cmd(TIM2,ENABLE);//?????TIM2
+}
+/*void Motor_Init(u16 TIM2per, u16 TIM3per, u16 TIM3Compare1)
+{
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+  TIM_OCInitTypeDef TIM_OCInitStruct;
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//?????3???
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//??GPIOA??
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);//????IO??
+
+
+GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_6;//PA0
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA,&GPIO_InitStruct);
+
+  //TIM2???????
+  TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;//??????
+  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 7200;//????,?100us????
+  TIM_TimeBaseInitStruct.TIM_Period = TIM2per;//???
+  TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
+
+  TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
+  TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
+  TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
+
+  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM2;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
+  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
+  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
+  TIM_OCInitStruct.TIM_Pulse = 1;//????1?????
+  TIM_OC1Init(TIM2,&TIM_OCInitStruct);
+
+  TIM_Cmd(TIM2,DISABLE);//?????TIM2
+
+
+  //TIM3?????????????PWM????
+  TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;//??????
+  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
+  TIM_TimeBaseInitStruct.TIM_Prescaler = 720;//????,10us????
+  TIM_TimeBaseInitStruct.TIM_Period = TIM3per;//???
+  TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStruct);
+
+  TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Gated);//TIM3?????
+  TIM_SelectMasterSlaveMode(TIM3,TIM_MasterSlaveMode_Enable);//??TIM3?????
+  TIM_SelectInputTrigger(TIM3,TIM_TS_ITR1);//????,?TIM2??
+
+  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM2;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
+  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
+  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
+  TIM_OCInitStruct.TIM_Pulse = TIM3Compare1;//????1?????
+  TIM_OC1Init(TIM3,&TIM_OCInitStruct);
+
+  TIM_Cmd(TIM3,ENABLE);//??TIM3
+}
+
+//??PWM???
+//Cycle:???,??(us)
+//Pulse_Num:?????(??3200)
+void TIM2_TIM3_PWM(u16 Cycle, u16 Pulse_Num)
+{
+  u16 TIM3per = 0;
+  u32 Time = 0;
+  //??TIM3????????????????????50%
+  //??TIM2???????????????
+
+  Time = Cycle * Pulse_Num;
+  Time /= 100;              //????7200,100us????
+  TIM3per = Cycle/10;       //????720,10us????
+
+  TIM_SetAutoreload(TIM2, Time+1);//??TIM2????
+  TIM_SetAutoreload(TIM3, TIM3per-1);//??TIM3????
+  TIM_SetCompare1(TIM3,TIM3per/2);//??????50%
+  TIM_Cmd(TIM2,ENABLE);//??TIM2
+}*/

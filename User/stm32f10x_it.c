@@ -163,7 +163,7 @@ void SysTick_Handler(void)
  */
 void delay_ms(uint16_t  MS){
   uint32_t temp_load,temp_ctrl=0;
-	temp_load = MS*(72000000/1000);
+	temp_load = MS*(SystemCoreClock/1000);
 	SysTick->LOAD = (temp_load & SysTick_LOAD_RELOAD_Msk)-1;
 	SysTick->VAL = 0;
 	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
@@ -204,7 +204,7 @@ void EXTI9_5_IRQHandler(void){
 	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
 		k -= 0.1;
 		//Delay_Stupid(7000000);
-		delay_ms(8000);
+		delay_ms(10000);
 		EXTI_ClearITPendingBit(EXTI_Line6);
 	}
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
