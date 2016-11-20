@@ -108,7 +108,7 @@ int main(void)
 		ADC_Cmd(ADC1, DISABLE);
 		ADC_Cmd(ADC2, ENABLE);
 		irs = GetAdc2(ADC_Channel_2);
-		averirs = GetAdc2Average(ADC_Channel_2, 1000);
+		averirs = GetAdc2Average(ADC_Channel_2, 100);
 		if(temt6000){
 			lux = CalLux(temt6000);
 			averlux = CalAverageLux(avertemt6000);

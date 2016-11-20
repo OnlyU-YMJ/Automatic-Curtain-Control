@@ -320,22 +320,22 @@ float CalAverageLength(u16 Aver_Analogue_In){
  * @param		GPIO_Pin: GPIO pin number(0~15)
  * @retval		Return Bit_RESET is ON, Bit_SET is OFF.
  */
-uint8_t KeyScan(GPIO_TypeDef* GPIOx, u16 GPIO_Pin){
-	if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
-		Delay(50);// Delay to clear the jitter
-		if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
-			while(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == Bit_RESET);
-			Delay(5);
-			return Bit_RESET;
-		}
-		else{
-			return Bit_SET;
-		}
-	}
-	else{
-		return Bit_SET;
-	}
-}
+// uint8_t KeyScan(GPIO_TypeDef* GPIOx, u16 GPIO_Pin){
+// 	if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
+// 		Delay(50);// Delay to clear the jitter
+// 		if(GPIO_ReadInputDataBit(GPIOx, GPIO_Pin) == Bit_RESET){
+// 			while(GPIO_ReadInputDataBit(GPIOx,GPIO_Pin) == Bit_RESET);
+// 			Delay(5);
+// 			return Bit_RESET;
+// 		}
+// 		else{
+// 			return Bit_SET;
+// 		}
+// 	}
+// 	else{
+// 		return Bit_SET;
+// 	}
+// }
 
 /**
  * @brief		Initialize SysTick, and unit is milllisecond.

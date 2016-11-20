@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c 
+  * @file    Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c
   * @author  MCD Application Team
   * @version V3.5.0
   * @date    08-April-2011
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -136,7 +136,7 @@ void PendSV_Handler(void)
   */
 
 void SysTick_Handler(void)
-{	
+{
 	TimingDelay_Decrement();
 }
 
@@ -172,7 +172,7 @@ void delay_ms(uint16_t  MS){
 	do{
 		  temp_ctrl = SysTick->CTRL;
     }while(temp_ctrl&0x01&&!(temp_ctrl & SysTick_CTRL_COUNTFLAG_Msk));
-		
+
 		SysTick->CTRL &=~(SysTick_CTRL_ENABLE_Msk |SysTick_CTRL_TICKINT_Msk);
 		SysTick->VAL = 0;
 }
@@ -196,21 +196,30 @@ extern float k;
 extern void Delay (__IO uint32_t nTime);
 void EXTI9_5_IRQHandler(void){
 	if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
-		k += 0.1;
-		//Delay_Stupid(7000000);
-		delay_ms(10000);
+        delay_ms(500);
+        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+            delay_ms(500);
+            k += 0.1;
+        }
 		EXTI_ClearITPendingBit(EXTI_Line7);
 	}
 	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
-		k -= 0.1;
-		//Delay_Stupid(7000000);
-		delay_ms(10000);
+        delay_ms(500);
+        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+            delay_ms(500);
+            k -= 0.1;
+        }
 		EXTI_ClearITPendingBit(EXTI_Line6);
 	}
 	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
-		k = 0.6;
-		delay_ms(5000);
-		//Delay_Stupid(50000);
+        delay_ms(500);
+        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET){
+            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
+            delay_ms(500);
+            k = 0.6;
+        }
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}
 }
