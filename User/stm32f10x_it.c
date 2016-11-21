@@ -248,18 +248,20 @@ void EXTI9_5_IRQHandler(void){
         if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                  // Motor rotates at right direction.
+                }
                 delay_ms(500);
-                // Motor rotates at right direction.
             }
             EXTI_ClearITPendingBit(EXTI_Line7);
         }
         if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                  // Motor rotates at left direction.
+                }
                 delay_ms(500);
-                // Motor rotates at left direction.
             }
             EXTI_ClearITPendingBit(EXTI_Line6);
         }
