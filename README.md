@@ -3,9 +3,9 @@
 ## How to use
 
 - Download source code
-- Open '.uvproj' file via Keil(uVision)
+- Open `.uvproj` file via Keil(uVision)
 - Compile & Build
-- Download '.hex' to your single chip computer.
+- Download `.hex` to your single chip computer.
 - Enjoy it :)
 
 ## Author
@@ -14,4 +14,4 @@
 
 ## Copyright
 
-Closed-Source 'Temporarily'
+Closed-Source `Temporarily`
