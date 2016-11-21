@@ -187,39 +187,90 @@ void Delay_Stupid(int number){
 	for(; number != 0; number--);
 }
 
+extern float k;
+extern void Delay (__IO uint32_t nTime);
+extern int auto_manual;
+
 /**
- * @brief		This function handles external interrupt.
+ * @brief		This function handles external interrupt line 4.
  * @param		None
  * @retval	None
  */
-extern float k;
-extern void Delay (__IO uint32_t nTime);
+void EXTI4_IRQHandler(void){
+    if(EXTI_GetITStatus(EXTI_Line4) != RESET){// Have EXTI line interrupt in PA.04
+        delay_ms(500);
+        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) == Bit_RESET){
+            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) == Bit_RESET);
+            delay_ms(500);
+            auto_manual = 1;// Change automatic mode to manual mode.
+        }
+        EXTI_ClearITPendingBit(EXTI_Line4);
+    }
+
+}
+
+/**
+ * @brief		This function handles external interrupt line 9..5.
+ * @param		None
+ * @retval	None
+ */
 void EXTI9_5_IRQHandler(void){
-	if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
-        delay_ms(500);
-        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
-            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+    if(!auto_manual){// At automatic mode
+        if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
             delay_ms(500);
-            k += 0.1;
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+                delay_ms(500);
+                k += 0.1;// Up key
+            }
+            EXTI_ClearITPendingBit(EXTI_Line7);
         }
-		EXTI_ClearITPendingBit(EXTI_Line7);
-	}
-	if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
-        delay_ms(500);
-        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
-            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+        if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
             delay_ms(500);
-            k -= 0.1;
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+                delay_ms(500);
+                k -= 0.1;// Down key
+            }
+            EXTI_ClearITPendingBit(EXTI_Line6);
         }
-		EXTI_ClearITPendingBit(EXTI_Line6);
-	}
-	if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
-        delay_ms(500);
-        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET){
-            while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
+        if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
             delay_ms(500);
-            k = 0.6;
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
+                delay_ms(500);
+                k = 0.6;// Reset key
+            }
+            EXTI_ClearITPendingBit(EXTI_Line5);
         }
-		EXTI_ClearITPendingBit(EXTI_Line5);
-	}
+    }
+    else{// At manual mode
+        if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
+            delay_ms(500);
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+                delay_ms(500);
+                // Motor rotates at right direction.
+            }
+            EXTI_ClearITPendingBit(EXTI_Line7);
+        }
+        if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
+            delay_ms(500);
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+                delay_ms(500);
+                // Motor rotates at left direction.
+            }
+            EXTI_ClearITPendingBit(EXTI_Line6);
+        }
+        if(EXTI_GetITStatus(EXTI_Line5) != RESET){// Have EXTI line interrupt in PA.05
+            delay_ms(500);
+            if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET){
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
+                delay_ms(500);
+                auto_manual = 0;// Change manual mode to automatic mode.
+            }
+            EXTI_ClearITPendingBit(EXTI_Line5);
+        }
+    }
 }

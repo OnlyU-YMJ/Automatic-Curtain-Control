@@ -36,6 +36,7 @@ float k;// Scale factor K
 int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
 float length, averlength;
+int auto_manual = 0;// 0 stands for auto, 1 stands for manual. Default is auto.
 //y=-5.648*x^3+35.42*x^2-82.44*x+80.52
 
 /* Function Declaration */

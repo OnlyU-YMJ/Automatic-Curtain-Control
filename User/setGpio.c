@@ -373,9 +373,9 @@ void EXTIInit(void){
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
-
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
 	// Configure EXTI line 5, 6, 7
-	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7;
+	EXTI_InitStructure.EXTI_Line = EXTI_Line4 | EXTI_Line5 | EXTI_Line6 | EXTI_Line7;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
@@ -392,7 +392,7 @@ void EXTIInit(void){
 void NVICInit(void){
 	NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn | EXTI4_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
