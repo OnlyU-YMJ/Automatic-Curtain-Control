@@ -57,6 +57,7 @@ void EXTIInit(void);
 void setPB0_7_OPP(void);
 void setPB10_11_OPP(void);
 void LEDSD_Test(void);
+void LEDSD_ERROR(void);
 void setPA11_12_OPP(void);
 void LEDSD_X(int);
 void delay_ms(uint16_t);
@@ -121,13 +122,24 @@ int main(void)
 		}
 		k_up = k / 1;
 		k_dp = (int)(k * 10) % 10;
+
 		LEDSD_CLEAR();
 		LEDSD_UP();
-		LEDSD_X(k_up);
+		if(!auto_manual){// At automatic mode.
+			LEDSD_X(k_up);
+		}
+		else{// At manual mode.
+			LEDSD_ERROR();
+		}
 		delay_ms(10);
 		LEDSD_CLEAR();
 		LEDSD_DP();
-		LEDSD_X(k_dp);
+		if(!auto_manual){// At automatic mode.
+			LEDSD_X(k_dp);
+		}
+		else{// At manual mode.
+			LEDSD_ERROR();
+		}
 		delay_ms(10);
 	 	// TIM2_TIM3_PWM(1000,10);
 	}
