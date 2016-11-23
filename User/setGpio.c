@@ -311,14 +311,12 @@ float CalLux(u16 Analogue_In){
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
-float volts1, length1;
+float volts, length;
 float CalLength(u16 Analogue_In){
-	float volts, length;
-	volts1 = Analogue_In * 3.3 / 4096.0;
-	// length1 = -5.648*pow(volts1,3)+35.42*pow(volts1,2)-82.44*volts1+80.52;
-	// length1 = 0.08878 * pow(volts1, 5) + 0.02576 * pow(volts1, 4) - 0.58 * pow(volts1, 3) + 1.173 * pow(volts1, 2) - 7.093 * volts1 + 36.89;
-	length1 = 42.21*pow(volts1, 5.0) -323.1*pow(volts1, 4.0) + 965.9*pow(volts1, 3.0) -1392*pow(volts1, 2.0) + 923.4*volts1 - 160.1;
-	return length1;
+	// float volts, length;
+	volts = Analogue_In * 3.3 / 4096.0;
+	length = 42.21*pow(volts, 5.0) -323.1*pow(volts, 4.0) + 965.9*pow(volts, 3.0) -1392*pow(volts, 2.0) + 923.4*volts - 160.1;
+	return length;
 }
 
 /**
@@ -329,7 +327,7 @@ float CalLength(u16 Analogue_In){
 float CalAverageLength(u16 Aver_Analogue_In){
 	float avervolts, averlength;
 	avervolts = Aver_Analogue_In * 3.3 / 4096.0;
-	averlength = -5.648*pow(avervolts,3)+35.42*pow(avervolts,2)-82.44*avervolts+80.52;
+	averlength = 42.21*pow(avervolts, 5.0) -323.1*pow(avervolts, 4.0) + 965.9*pow(avervolts, 3.0) -1392*pow(avervolts, 2.0) + 923.4*avervolts - 160.1;
 	return averlength;
 }
 
