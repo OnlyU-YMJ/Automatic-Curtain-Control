@@ -291,7 +291,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>129</TopLine>
+      <TopLine>130</TopLine>
       <CurrentLine>133</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup_stm32f10x_md.s</PathWithFileName>
@@ -1163,7 +1163,7 @@
       <Focus>0</Focus>
       <ColumnNumber>13</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>25</TopLine>
+      <TopLine>28</TopLine>
       <CurrentLine>33</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\User\main.c</PathWithFileName>
@@ -1179,7 +1179,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>169</TopLine>
+      <TopLine>170</TopLine>
       <CurrentLine>174</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\User\stm32f10x_it.c</PathWithFileName>
@@ -1209,10 +1209,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>3</ColumnNumber>
+      <ColumnNumber>43</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>287</TopLine>
-      <CurrentLine>305</CurrentLine>
+      <TopLine>301</TopLine>
+      <CurrentLine>308</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\User\setGpio.c</PathWithFileName>
       <FilenameWithoutPath>setGpio.c</FilenameWithoutPath>

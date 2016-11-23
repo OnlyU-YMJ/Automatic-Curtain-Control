@@ -57,15 +57,29 @@ void setPA6_IPU(void){
 }
 
 /**
- * @brief
- * @param
- * @retval
+ * @brief		Set PA.05 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
  */
 void setPA5_IPU(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief		Set PA.04 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA4_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
@@ -272,7 +286,8 @@ float CalAverageLux(u16 Aver_Analogue_In){
 	avervolts = Aver_Analogue_In * 3.3 / 4096.0;
 	averamps = avervolts / 10000.0;  // across 10,000 Ohms
 	avermicroamps = averamps * 1000000;
-	averlux = avermicroamps * 2.0;
+	// averlux = avermicroamps * 2.0;
+	averlux = avermicroamps - sqrt(10);
 	return averlux;
 }
 
@@ -286,7 +301,8 @@ float CalLux(u16 Analogue_In){
 	volts = Analogue_In * 3.3 / 4096.0;
 	amps = volts / 10000.0;  // across 10,000 Ohms
 	microamps = amps * 1000000;
-	lux = microamps * 2.0;
+	// lux = microamps * 2.0;
+	lux = microamps - sqrt(10);
 	return lux;
 }
 
@@ -295,11 +311,14 @@ float CalLux(u16 Analogue_In){
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
+float volts1, length1;
 float CalLength(u16 Analogue_In){
 	float volts, length;
-	volts = Analogue_In * 3.3 / 4096.0;
-	length = -5.648*pow(volts,3)+35.42*pow(volts,2)-82.44*volts+80.52;
-	return length;
+	volts1 = Analogue_In * 3.3 / 4096.0;
+	// length1 = -5.648*pow(volts1,3)+35.42*pow(volts1,2)-82.44*volts1+80.52;
+	// length1 = 0.08878 * pow(volts1, 5) + 0.02576 * pow(volts1, 4) - 0.58 * pow(volts1, 3) + 1.173 * pow(volts1, 2) - 7.093 * volts1 + 36.89;
+	length1 = 42.21*pow(volts1, 5.0) -323.1*pow(volts1, 4.0) + 965.9*pow(volts1, 3.0) -1392*pow(volts1, 2.0) + 923.4*volts1 - 160.1;
+	return length1;
 }
 
 /**
@@ -373,15 +392,16 @@ void EXTIInit(void){
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
 	// Configure EXTI line 5, 6, 7
-	EXTI_InitStructure.EXTI_Line = EXTI_Line4 | EXTI_Line5 | EXTI_Line6 | EXTI_Line7;
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line4;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 
 	NVICInit();
+
 }
 
 /**
@@ -392,12 +412,20 @@ void EXTIInit(void){
 void NVICInit(void){
 	NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn | EXTI4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
 	NVIC_Init(&NVIC_InitStructure);
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
+	NVIC_Init(&NVIC_InitStructure);
 }
+
 
 /* Define LED lights */
 // Centeral Up light tube (GPIOA)

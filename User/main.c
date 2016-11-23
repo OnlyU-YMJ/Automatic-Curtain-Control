@@ -66,8 +66,8 @@ void LEDSD_CLEAR(void);
 void PWMInit(void);
 float CalLength(u16);
 float CalAverageLength(u16);
-
-
+void setPA4_IPU(void);
+//float volts, length;
 /**
  * @brief  Main program.
  * @param  None
@@ -80,6 +80,7 @@ int main(void)
 	setPA7_IPU();
 	setPA6_IPU();
 	setPA5_IPU();
+	setPA4_IPU();
 	setPB0_7_OPP();
 	setPB10_11_OPP();
 	setPA11_12_OPP();

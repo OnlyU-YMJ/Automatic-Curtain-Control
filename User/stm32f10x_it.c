@@ -190,13 +190,14 @@ void Delay_Stupid(int number){
 extern float k;
 extern void Delay (__IO uint32_t nTime);
 extern int auto_manual;
-
+int test_exti = 0;
 /**
  * @brief		This function handles external interrupt line 4.
  * @param		None
  * @retval	None
  */
 void EXTI4_IRQHandler(void){
+    test_exti = 1;
     if(EXTI_GetITStatus(EXTI_Line4) != RESET){// Have EXTI line interrupt in PA.04
         delay_ms(500);
         if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) == Bit_RESET){
@@ -206,7 +207,6 @@ void EXTI4_IRQHandler(void){
         }
         EXTI_ClearITPendingBit(EXTI_Line4);
     }
-
 }
 
 /**
@@ -215,6 +215,7 @@ void EXTI4_IRQHandler(void){
  * @retval	None
  */
 void EXTI9_5_IRQHandler(void){
+    test_exti = 2;
     if(!auto_manual){// At automatic mode
         if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
             delay_ms(500);
@@ -248,18 +249,20 @@ void EXTI9_5_IRQHandler(void){
         if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                    // Motor rotates at right direction.
+                }
                 delay_ms(500);
-                // Motor rotates at right direction.
             }
             EXTI_ClearITPendingBit(EXTI_Line7);
         }
         if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
+                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                    // Motor rotates at left direction.
+                }
                 delay_ms(500);
-                // Motor rotates at left direction.
             }
             EXTI_ClearITPendingBit(EXTI_Line6);
         }
