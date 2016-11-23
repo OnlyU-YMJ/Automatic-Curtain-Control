@@ -312,6 +312,8 @@ float CalLux(u16 Analogue_In){
  * @retval	The average value of lux.
  */
 float volts, length;
+
+/* Infrared Ranging Sensor */
 float CalLength(u16 Analogue_In){
 	// float volts, length;
 	volts = Analogue_In * 3.3 / 4096.0;
@@ -695,9 +697,6 @@ void LEDSD_CLEAR(void){
 	GPIO_ResetBits(GPIOA, LED_CU | LED_RU);
 }
 
-/* Infrared Ranging Sensor*/
-
-
 
 /* Motor */
 void PWMInit(void)
@@ -735,7 +734,13 @@ void PWMInit(void)
 
   TIM_Cmd(TIM2,ENABLE);//?????TIM2
 }
-/*void Motor_Init(u16 TIM2per, u16 TIM3per, u16 TIM3Compare1)
+/**
+ * @brief
+ * @param
+ * @retval
+ */
+/*
+void Motor_Init(u16 TIM2per, u16 TIM3per, u16 TIM3Compare1)
 {
   TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
   TIM_OCInitTypeDef TIM_OCInitStruct;
@@ -743,14 +748,15 @@ void PWMInit(void)
 
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//?????3???
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//??GPIOA??
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);//????IO??
+	// These two line have already opened.
+  // RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//??GPIOA??
+  // RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);//????IO??
 
-
-GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_6;//PA0
+	// Configure PA.00 and PA.06 at alternative function mode.
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_6;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA,&GPIO_InitStruct);
+  GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   //TIM2???????
   TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;//??????
@@ -795,6 +801,12 @@ GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
 //??PWM???
 //Cycle:???,??(us)
 //Pulse_Num:?????(??3200)
+/**
+ * @brief
+ * @param
+ * @retval
+ */
+/*
 void TIM2_TIM3_PWM(u16 Cycle, u16 Pulse_Num)
 {
   u16 TIM3per = 0;
