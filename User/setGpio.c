@@ -135,7 +135,19 @@ void setPA11_12_OPP(void){
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
-
+/**
+ * @brief		Set PB.14 and PB.15 pins at ouput push-push mode, 2MHz speed.
+ * @param		None
+ * @retval	None
+ */
+void setPB14_15_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15 | GPIO_Pin_14;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+}
 
 /**
  * @brief		Delay the program.
@@ -306,16 +318,15 @@ float CalLux(u16 Analogue_In){
 	return lux;
 }
 
+/* Infrared Ranging Sensor */
+
 /**
  * @brief		Get length from analogue input pin PA2.
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
-float volts, length;
-
-/* Infrared Ranging Sensor */
 float CalLength(u16 Analogue_In){
-	// float volts, length;
+	float volts, length;
 	volts = Analogue_In * 3.3 / 4096.0;
 	length = 42.21*pow(volts, 5.0) -323.1*pow(volts, 4.0) + 965.9*pow(volts, 3.0) -1392*pow(volts, 2.0) + 923.4*volts - 160.1;
 	return length;
@@ -389,12 +400,13 @@ void EXTIInit(void){
 	void NVICInit(void);
 	EXTI_InitTypeDef EXTI_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);// Enable the AFIO clock
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource8);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
 	// Configure EXTI line 5, 6, 7
-	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line4;
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line8 | EXTI_Line4;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
@@ -699,41 +711,97 @@ void LEDSD_CLEAR(void){
 
 
 /* Motor */
-void PWMInit(void)
-{
-  TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
-  TIM_OCInitTypeDef TIM_OCInitStruct;
-  GPIO_InitTypeDef GPIO_InitStruct;
+extern int count;
+void delay_ms(uint16_t);
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
-  //GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
+/**
+ * @brief			This function delays the program, in millisecond.
+ * @param 		MS: The number of millisecond.
+ * @retval		None
+ */
+void delay_ms_SB(uint16_t  MS){
+	uint32_t temp_load,temp_ctrl=0;
+	temp_load = MS*(SystemCoreClock/1000);
+	SysTick->LOAD = (temp_load & SysTick_LOAD_RELOAD_Msk)-1;
+	SysTick->VAL = 0;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+	SysTick_CTRL_TICKINT_Msk |
+	SysTick_CTRL_ENABLE_Msk ;
+	do{
+		temp_ctrl = SysTick->CTRL;
+	}while(temp_ctrl&0x01&&!(temp_ctrl & SysTick_CTRL_COUNTFLAG_Msk));
 
-  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;//PA0
-  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA,&GPIO_InitStruct);
-
-  //TIM2???????
-  TIM_TimeBaseInitStruct.TIM_ClockDivision = 0;//??????
-  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 0;//????,?100us????
-  TIM_TimeBaseInitStruct.TIM_Period = 10000;//???
-  TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
-
-  TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
-  TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
-  TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
-
-  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
-  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
-  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
-  TIM_OCInitStruct.TIM_Pulse = 990;//????1?????
-  TIM_OC1Init(TIM2,&TIM_OCInitStruct);
-  TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
-  TIM_ARRPreloadConfig(TIM2, ENABLE);
-
-  TIM_Cmd(TIM2,ENABLE);//?????TIM2
+	SysTick->CTRL &=~(SysTick_CTRL_ENABLE_Msk |SysTick_CTRL_TICKINT_Msk);
+	SysTick->VAL = 0;
 }
+/**
+ * @brief	Using motor to open the curtain when sysyem at automactic mode, the number of impluse is tem.
+ * @param	tem: The number of needed impluse to open the curtain.
+ * @retval	None
+ */
+void MotorOpen(int tem){
+	GPIO_SetBits(GPIOB, GPIO_Pin_14);
+	for(tem = 30; tem > 0 ; tem--){
+		count++;
+		GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		delay_ms_SB(2);
+		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		delay_ms_SB(2);
+	}
+}
+
+/**
+ * @brief	Using motor to close the curtain when system at automatic mode, the number of impluse is tem.
+ * @param	tem: The number of needed impluse to close the curtain.
+ * @retval	None
+ */
+void MotorClose(void){
+	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
+	for(tem = 30; tem > 0 ; tem--){
+		count--;
+		GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		delay_ms_SB(2);
+		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		delay_ms_SB(2);
+	}
+}
+
+
+// void PWMInit(void)
+// {
+//   TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+//   TIM_OCInitTypeDef TIM_OCInitStruct;
+//   GPIO_InitTypeDef GPIO_InitStruct;
+//
+//   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
+//   //GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
+//
+//   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
+//   GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;//PA0
+//   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+//   GPIO_Init(GPIOA,&GPIO_InitStruct);
+//
+//   //TIM2???????
+//   TIM_TimeBaseInitStruct.TIM_ClockDivision = 0;//??????
+//   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
+//   TIM_TimeBaseInitStruct.TIM_Prescaler = 0;//????,?100us????
+//   TIM_TimeBaseInitStruct.TIM_Period = 10000;//???
+//   TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
+//
+//   TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
+//   TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
+//   TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
+//
+//   TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
+//   TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
+//   TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
+//   TIM_OCInitStruct.TIM_Pulse = 990;//????1?????
+//   TIM_OC1Init(TIM2,&TIM_OCInitStruct);
+//   TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
+//   TIM_ARRPreloadConfig(TIM2, ENABLE);
+//
+//   TIM_Cmd(TIM2,ENABLE);//?????TIM2
+// }
 /**
  * @brief
  * @param
@@ -797,10 +865,11 @@ void Motor_Init(u16 TIM2per, u16 TIM3per, u16 TIM3Compare1)
 
   TIM_Cmd(TIM3,ENABLE);//??TIM3
 }
-
+*/
 //??PWM???
 //Cycle:???,??(us)
 //Pulse_Num:?????(??3200)
+
 /**
  * @brief
  * @param

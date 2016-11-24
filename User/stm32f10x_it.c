@@ -214,6 +214,7 @@ void EXTI4_IRQHandler(void){
  * @param		None
  * @retval	None
  */
+extern int count;
 void EXTI9_5_IRQHandler(void){
     test_exti = 2;
     if(!auto_manual){// At automatic mode
@@ -249,8 +250,14 @@ void EXTI9_5_IRQHandler(void){
         if(EXTI_GetITStatus(EXTI_Line7) != RESET){// Have EXTI line interrupt in PA.07
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                GPIO_SetBits(GPIOB, GPIO_Pin_14);
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                     // Motor rotates at right direction.
+                    GPIO_SetBits(GPIOB, GPIO_Pin_15);
+            		delay_ms(2);
+            		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+            		delay_ms(2);
+                    count++;
                 }
                 delay_ms(500);
             }
@@ -259,8 +266,14 @@ void EXTI9_5_IRQHandler(void){
         if(EXTI_GetITStatus(EXTI_Line6) != RESET){// Have EXTI line interrupt in PA.06
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                GPIO_ResetBits(GPIOB, GPIO_Pin_14);
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                     // Motor rotates at left direction.
+                    GPIO_SetBits(GPIOB, GPIO_Pin_15);
+            		delay_ms(2);
+            		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+            		delay_ms(2);
+                    count--;
                 }
                 delay_ms(500);
             }
@@ -275,5 +288,9 @@ void EXTI9_5_IRQHandler(void){
             }
             EXTI_ClearITPendingBit(EXTI_Line5);
         }
+    }
+	if(EXTI_GetITStatus(EXTI_Line8) != RESET){
+        count = 0;
+        EXTI_ClearITPendingBit(EXTI_Line8);
     }
 }

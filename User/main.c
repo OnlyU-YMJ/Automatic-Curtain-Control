@@ -36,8 +36,11 @@ float k;// Scale factor K
 int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
 float length, averlength;
-int auto_manual = 0;// 0 stands for auto, 1 stands for manual. Default is auto.
+int auto_manual = 1;// 0 stands for auto, 1 stands for manual. Default is auto.
 //y=-5.648*x^3+35.42*x^2-82.44*x+80.52
+int count = 0;// Counting for the number of impluse.
+int tem = 0;// Temporary parameter.
+int length_up, lux_up;
 
 /* Function Declaration */
 void AdcInit(void);
@@ -68,6 +71,10 @@ void PWMInit(void);
 float CalLength(u16);
 float CalAverageLength(u16);
 void setPA4_IPU(void);
+void setPB14_15_OPP(void);
+void MotorOpen(int);
+void MotorClose(int);
+
 //float volts, length;
 /**
  * @brief  Main program.
@@ -85,6 +92,7 @@ int main(void)
 	setPB0_7_OPP();
 	setPB10_11_OPP();
 	setPA11_12_OPP();
+	setPB14_15_OPP();
 	// Initialize the alternative functions.
 	EXTIInit();
 	SysTickInit();
@@ -141,6 +149,37 @@ int main(void)
 			LEDSD_ERROR();
 		}
 		delay_ms(10);
-	 	// TIM2_TIM3_PWM(1000,10);
-	}
+
+		if(!auto_manual){// At automatic mode.
+			length_up = (averlength - 26) * 250;
+			lux_up = averlux * 10;
+			if(count){
+				if(lux_up - 30 > count){
+					tem = lux_up - count;
+				}
+				else{
+					if(count - 30 > lux_up){
+						tem = lux_up - count;
+					}
+				}
+				if(tem > 0){
+					MotorOpen(tem);
+					tem = 0;
+				}
+				else{
+					if(tem < 0){
+						tem = (-1) * tem;
+						MotorClose(tem);
+						tem = 0;
+					}
+				}
+			}
+			else{
+				if((length_up - count) > 50){
+					count = length_up;
+				}
+			}
+			// TIM2_TIM3_PWM(1000,10);
+		}
+	}// while(1)
 }
