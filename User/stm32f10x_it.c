@@ -215,6 +215,10 @@ void EXTI4_IRQHandler(void){
  * @retval	None
  */
 extern int count;
+void LEDSD_ERROR(void);
+void LEDSD_UP(void);
+void LEDSD_DP(void);
+void LEDSD_CLEAR(void);
 void EXTI9_5_IRQHandler(void){
     test_exti = 2;
     if(!auto_manual){// At automatic mode
@@ -224,6 +228,8 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET);
                 delay_ms(500);
                 k += 0.1;// Up key
+                Getk_up();
+                Getk_dp();
             }
             EXTI_ClearITPendingBit(EXTI_Line7);
         }
@@ -233,6 +239,8 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET);
                 delay_ms(500);
                 k -= 0.1;// Down key
+                Getk_up();
+                Getk_dp();
             }
             EXTI_ClearITPendingBit(EXTI_Line6);
         }
@@ -242,6 +250,8 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
                 delay_ms(500);
                 k = 0.6;// Reset key
+                Getk_up();
+                Getk_dp();
             }
             EXTI_ClearITPendingBit(EXTI_Line5);
         }
@@ -254,8 +264,14 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                     // Motor rotates at right direction.
                     GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                    LEDSD_CLEAR();
+        			LEDSD_UP();
+        			LEDSD_ERROR();
             		delay_ms(2);
             		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                    LEDSD_CLEAR();
+        			LEDSD_DP();
+        			LEDSD_ERROR();
             		delay_ms(2);
                     count++;
                 }
@@ -270,8 +286,14 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                     // Motor rotates at left direction.
                     GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                    LEDSD_CLEAR();
+        			LEDSD_UP();
+        			LEDSD_ERROR();
             		delay_ms(2);
             		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                    LEDSD_CLEAR();
+        			LEDSD_DP();
+        			LEDSD_ERROR();
             		delay_ms(2);
                     count--;
                 }

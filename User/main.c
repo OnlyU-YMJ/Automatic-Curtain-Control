@@ -22,6 +22,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "math.h"
+#include "stdlib.h"
 /* Public Defines */
 #define temt6000 pa0
 #define avertemt6000 averpa0
@@ -36,11 +37,14 @@ float k;// Scale factor K
 int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
 float length, averlength;
+// [Debug]
 int auto_manual = 1;// 0 stands for auto, 1 stands for manual. Default is auto.
 //y=-5.648*x^3+35.42*x^2-82.44*x+80.52
 int count = 0;// Counting for the number of impluse.
 int tem = 0;// Temporary parameter.
-int length_up, lux_up;
+int adjustLengthImpluse, openLengthImpluse;
+// [Debug] DO NOT NEED TO ADJUST
+int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 
 /* Function Declaration */
 void AdcInit(void);
@@ -74,6 +78,8 @@ void setPA4_IPU(void);
 void setPB14_15_OPP(void);
 void MotorOpen(int);
 void MotorClose(int);
+int Getk_up(void);
+int Getk_dp(void);
 
 //float volts, length;
 /**
@@ -105,6 +111,8 @@ int main(void)
 	avertemt6000 = 0;
 	isalive = 0;
 	k = 0.6;
+	k_up = 0;
+	k_dp = 6;
 	length = 0;
 	averlength = 0;
 
@@ -128,56 +136,60 @@ int main(void)
 			length = CalLength(irs);
 			averlength = CalAverageLength(averirs);
 		}
-		k_up = k / 1;
-		k_dp = (int)(k * 10) % 10;
 
-		LEDSD_CLEAR();
-		LEDSD_UP();
-		if(!auto_manual){// At automatic mode.
-			LEDSD_X(k_up);
-		}
-		else{// At manual mode.
+		if(auto_manual){// At manual mode.
+			// k_up = Getk_up();
+			// k_dp = Getk_dp();
+			LEDSD_CLEAR();
+			LEDSD_UP();
 			LEDSD_ERROR();
-		}
-		delay_ms(10);
-		LEDSD_CLEAR();
-		LEDSD_DP();
-		if(!auto_manual){// At automatic mode.
-			LEDSD_X(k_dp);
-		}
-		else{// At manual mode.
+			delay_ms(10);
+			LEDSD_CLEAR();
+			LEDSD_DP();
 			LEDSD_ERROR();
+			delay_ms(10);
 		}
-		delay_ms(10);
-
-		if(!auto_manual){// At automatic mode.
-			length_up = (averlength - 26) * 250;
-			lux_up = averlux * 10;
-			if(count){
-				if(lux_up - 30 > count){
-					tem = lux_up - count;
-				}
-				else{
-					if(count - 30 > lux_up){
-						tem = lux_up - count;
-					}
-				}
-				if(tem > 0){
-					MotorOpen(tem);
-					tem = 0;
-				}
-				else{
-					if(tem < 0){
-						tem = (-1) * tem;
-						MotorClose(tem);
-						tem = 0;
-					}
-				}
+		else{// At automatic mode.
+			adjustLengthImpluse = (averlength - 26) * 250;
+			openLengthImpluse = 4500 - k * averlux * 200;
+			if(openLengthImpluse > 4500){
+				openLengthImpluse = 4500;
 			}
-			else{
-				if((length_up - count) > 50){
-					count = length_up;
+			if(openLengthImpluse < 0){
+				openLengthImpluse = 0;
+			}
+			if(count > 4500){
+				count = 4500;
+			}
+			if(count < 0){
+				count = 0;
+			}
+
+			if(isadjust || count){
+				if(openLengthImpluse - 300 > count){
+					MotorOpen(10);
 				}
+				else{
+					if(count - 300 > openLengthImpluse){
+						MotorClose(10);
+					}
+					else{
+						LEDSD_CLEAR();
+						LEDSD_UP();
+						LEDSD_X(k_up);
+						delay_ms(10);
+						LEDSD_CLEAR();
+						LEDSD_DP();
+						LEDSD_X(k_dp);
+						delay_ms(10);
+					}
+			    }
+			}
+			else{// Start up the product.
+				if((adjustLengthImpluse - count) > 50){
+					count = adjustLengthImpluse;
+				}
+				isadjust = 1;
 			}
 			// TIM2_TIM3_PWM(1000,10);
 		}

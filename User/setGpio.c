@@ -734,35 +734,82 @@ void delay_ms_SB(uint16_t  MS){
 	SysTick->CTRL &=~(SysTick_CTRL_ENABLE_Msk |SysTick_CTRL_TICKINT_Msk);
 	SysTick->VAL = 0;
 }
+
+extern int k_up, k_dp;
+extern float k;
+/**
+ * @brief	Calulate and get k unit place value.
+ * @param	None
+ * @retval	The unit place value of k.
+ */
+int Getk_up(void){
+	k_up = k / 1;
+	return k_up;
+}
+
+/**
+ * @brief	Calulate and get k decimal place value.
+ * @param	None
+ * @retval	The decimal place value of k.
+ */
+int Getk_dp(void){
+	k_dp = (int)(k * 10) % 10;
+	return k_dp;
+}
+
 /**
  * @brief	Using motor to open the curtain when sysyem at automactic mode, the number of impluse is tem.
- * @param	tem: The number of needed impluse to open the curtain.
+ * @param	None
  * @retval	None
  */
 void MotorOpen(int tem){
+	int i = 0;
 	GPIO_SetBits(GPIOB, GPIO_Pin_14);
-	for(tem = 30; tem > 0 ; tem--){
+	for(; tem > 0; tem--){
 		count++;
 		GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		}
 		delay_ms_SB(2);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		if(i % 2 == 0){
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+		}
 		delay_ms_SB(2);
-	}
+		i++;
+	}// for
 }
 
 /**
  * @brief	Using motor to close the curtain when system at automatic mode, the number of impluse is tem.
- * @param	tem: The number of needed impluse to close the curtain.
+ * @param	None
  * @retval	None
  */
-void MotorClose(void){
+void MotorClose(int tem){
+	int i = 0;
 	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
-	for(tem = 30; tem > 0 ; tem--){
+	for(; tem > 0; tem--){
 		count--;
 		GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		}
 		delay_ms_SB(2);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		if(i % 2 == 0){
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+		}
 		delay_ms_SB(2);
+		i++;
 	}
 }
 
