@@ -94,7 +94,7 @@ int main(void)
 {
 	/* Initialize */
 	// Initialize the pins.
-  setPA9_IPU();
+	setPA9_IPU();
 	setPA8_IPU();
 	setPA7_IPU();
 	setPA6_IPU();
@@ -157,7 +157,7 @@ int main(void)
 		else{// At automatic mode.
 			adjustLengthImpluse = (averlength - 26) * 250;
 			// openLengthImpluse = 4500 - k * averlux * 208;
-			openLengthImpluse = 3750 - k * averlux * 184;
+			openLengthImpluse = 3750 - k * averlux * 61;
 			if(openLengthImpluse > 3750){
 				openLengthImpluse = 3750;
 			}

@@ -254,6 +254,7 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
                 delay_ms(500);
                 k = 0.6;// Reset key
+                stopMotor = 0;// Motor move.
                 Getk_up();
                 Getk_dp();
             }
@@ -265,9 +266,9 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                 GPIO_SetBits(GPIOB, GPIO_Pin_14);
-                if(stopMotor != 1){// Curtain is open.
+                if(stopMotor != 2){// Curtain is not fully open.
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
-                        // Motor rotates at right direction.
+                        // Open curtain.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_UP();
@@ -282,8 +283,10 @@ void EXTI9_5_IRQHandler(void){
                     }
                     delay_ms(500);
                 }
-                else{
-                    stopMotor = 0;// Motor move.
+                else{// Curtain is fully open || curtain has been fully open then partially closed.
+                    if(count < 3750){
+                        stopMotor = 0;// Motor move.
+                    }
                 }
             }
             EXTI_ClearITPendingBit(EXTI_Line7);
@@ -292,9 +295,9 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                 GPIO_ResetBits(GPIOB, GPIO_Pin_14);
-                if(stopMotor != 2){// Curtain is close.
+                if(stopMotor != 1){// Curtain is not fully closed.
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
-                        // Motor rotates at left direction.
+                        // Close curtain.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_UP();
@@ -309,8 +312,10 @@ void EXTI9_5_IRQHandler(void){
                     }
                     delay_ms(500);
                 }
-                else{
-                    stopMotor = 0;// Motor move.
+                else{// Curtain is fully closed || Curtain is closed & open.
+                    if(count > 0){
+                        stopMotor = 0;// Motor move.
+                    }
                 }
             }
             EXTI_ClearITPendingBit(EXTI_Line6);
@@ -336,7 +341,7 @@ void EXTI9_5_IRQHandler(void){
     }
     if(EXTI_GetITStatus(EXTI_Line9) != RESET){// Curtain is open.
         test_exti = 3;
-        count = 4500;
+        count = 3750;
         isadjust = 0;// Do not need to adjust.
         stopMotor = 2;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line9);
