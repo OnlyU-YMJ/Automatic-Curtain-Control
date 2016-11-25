@@ -219,6 +219,7 @@ void EXTI4_IRQHandler(void){
  * @retval      None
  */
 extern int count;
+extern uint16_t motorDelayTime;
 void LEDSD_ERROR(void);
 void LEDSD_UP(void);
 void LEDSD_DP(void);
@@ -268,23 +269,29 @@ void EXTI9_5_IRQHandler(void){
                 GPIO_SetBits(GPIOB, GPIO_Pin_14);
                 if(stopMotor != 2){// Curtain is not fully open.
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                        if(stopMotor == 1){
+                            stopMotor = 0;
+                        }
                         // Open curtain.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_UP();
                         LEDSD_ERROR();
-                        delay_ms(2);
+                        delay_ms(motorDelayTime);
                         GPIO_ResetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_DP();
                         LEDSD_ERROR();
-                        delay_ms(2);
+                        delay_ms(motorDelayTime);
+                        if(stopMotor == 2){
+                            break;
+                        }
                         count++;
                     }
                     delay_ms(500);
                 }
                 else{// Curtain is fully open || curtain has been fully open then partially closed.
-                    if(count < 3750){
+                    if(count != 3750){
                         stopMotor = 0;// Motor move.
                     }
                 }
@@ -296,24 +303,30 @@ void EXTI9_5_IRQHandler(void){
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                 GPIO_ResetBits(GPIOB, GPIO_Pin_14);
                 if(stopMotor != 1){// Curtain is not fully closed.
+                    if(stopMotor == 2){
+                        stopMotor = 0;
+                    }
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                         // Close curtain.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_UP();
                         LEDSD_ERROR();
-                        delay_ms(2);
+                        delay_ms(motorDelayTime);
                         GPIO_ResetBits(GPIOB, GPIO_Pin_15);
                         LEDSD_CLEAR();
                         LEDSD_DP();
                         LEDSD_ERROR();
-                        delay_ms(2);
+                        delay_ms(motorDelayTime);
+                        if(stopMotor == 1){
+                            break;
+                        }
                         count--;
                     }
                     delay_ms(500);
                 }
                 else{// Curtain is fully closed || Curtain is closed & open.
-                    if(count > 0){
+                    if(count != 0){
                         stopMotor = 0;// Motor move.
                     }
                 }
@@ -333,6 +346,7 @@ void EXTI9_5_IRQHandler(void){
         }
     }
     if(EXTI_GetITStatus(EXTI_Line8) != RESET){// Curtain is closed.
+
         test_exti = 3;
         count = 0;
         isadjust = 0;// Do not need to adjust.
@@ -345,5 +359,24 @@ void EXTI9_5_IRQHandler(void){
         isadjust = 0;// Do not need to adjust.
         stopMotor = 2;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line9);
+    }
+}
+
+/**
+ * @brief		This function handles external interrupt line 15..10.
+ * @param		None
+ * @retval      None
+ */
+void EXTI15_10_IRQHandler(void){
+    if(EXTI_GetITStatus(EXTI_Line10) != RESET){
+        test_exti = 4;
+        delay_ms(1000);
+        if(motorDelayTime == 1){
+            motorDelayTime = 3;
+        }
+        else{
+            motorDelayTime = 1;
+        }
+        EXTI_ClearITPendingBit(EXTI_Line10);
     }
 }

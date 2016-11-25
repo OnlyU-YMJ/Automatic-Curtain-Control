@@ -30,6 +30,21 @@ void setPA2_AIN ( void ) {
 }
 
 /**
+ * @brief	Set PA.10 pin at floating input mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA10_IF(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+
+/**
  * @brief	Set PA.08 pin at input pull-up mode.
  * @param 	None
  * @retval	None
@@ -282,17 +297,13 @@ u16 GetAdc2(u8 ch){
  * @retval	ADC1 average value.
  */
 u16 GetAdc1Average(u8 ch,u8 times){
-	// ADC_Cmd(ADC1, ENABLE);
 	void delay_ms(uint16_t  MS);
 	u32 temp_val=0;
 	u8 t;
 	for(t=0;t<times;t++)
 	{
 		temp_val+=GetAdc1(ch);
-		//Delay(5);
-		//delay_ms(5);
 	}
-	// ADC_Cmd(ADC1, DISABLE);
 	return temp_val/times;
 }
 
@@ -429,14 +440,15 @@ void EXTIInit(void){
 	void NVICInit(void);
 	EXTI_InitTypeDef EXTI_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);// Enable the AFIO clock
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource10);
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource9);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource8);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
-	// Configure EXTI line 5, 6, 7, 8, 9
-	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 |  EXTI_Line8 | EXTI_Line9 | EXTI_Line4;
+	// Configure EXTI line 5, 6, 7, 8, 9, 10
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 |  EXTI_Line8 | EXTI_Line9 | EXTI_Line4 | EXTI_Line10;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
@@ -453,6 +465,15 @@ void EXTIInit(void){
  */
 void NVICInit(void){
 	NVIC_InitTypeDef NVIC_InitStructure;
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
+	NVIC_Init(&NVIC_InitStructure);
+
+
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -792,6 +813,7 @@ int Getk_dp(void){
  * @param	None
  * @retval	None
  */
+extern uint16_t motorDelayTime;
 void MotorOpen(int tem){
 	int i = 0;
 	GPIO_SetBits(GPIOB, GPIO_Pin_14);
@@ -803,14 +825,14 @@ void MotorOpen(int tem){
 			LEDSD_UP();
 			LEDSD_X(k_up);
 		}
-		delay_ms_SB(2);
+		delay_ms_SB(motorDelayTime);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 		if(i % 2 == 0){
 			LEDSD_CLEAR();
 			LEDSD_DP();
 			LEDSD_X(k_dp);
 		}
-		delay_ms_SB(2);
+		delay_ms_SB(motorDelayTime);
 		i++;
 	}// for
 }
@@ -831,141 +853,14 @@ void MotorClose(int tem){
 			LEDSD_UP();
 			LEDSD_X(k_up);
 		}
-		delay_ms_SB(2);
+		delay_ms_SB(motorDelayTime);
 		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 		if(i % 2 == 0){
 			LEDSD_CLEAR();
 			LEDSD_DP();
 			LEDSD_X(k_dp);
 		}
-		delay_ms_SB(2);
+		delay_ms_SB(motorDelayTime);
 		i++;
 	}
 }
-
-
-// void PWMInit(void)
-// {
-//   TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
-//   TIM_OCInitTypeDef TIM_OCInitStruct;
-//   GPIO_InitTypeDef GPIO_InitStruct;
-//
-//   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
-//   //GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
-//
-//   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
-//   GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;//PA0
-//   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-//   GPIO_Init(GPIOA,&GPIO_InitStruct);
-//
-//   //TIM2???????
-//   TIM_TimeBaseInitStruct.TIM_ClockDivision = 0;//??????
-//   TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
-//   TIM_TimeBaseInitStruct.TIM_Prescaler = 0;//????,?100us????
-//   TIM_TimeBaseInitStruct.TIM_Period = 10000;//???
-//   TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
-//
-//   TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
-//   TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
-//   TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
-//
-//   TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
-//   TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
-//   TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
-//   TIM_OCInitStruct.TIM_Pulse = 990;//????1?????
-//   TIM_OC1Init(TIM2,&TIM_OCInitStruct);
-//   TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
-//   TIM_ARRPreloadConfig(TIM2, ENABLE);
-//
-//   TIM_Cmd(TIM2,ENABLE);//?????TIM2
-// }
-/**
- * @brief
- * @param
- * @retval
- */
-/*
-void Motor_Init(u16 TIM2per, u16 TIM3per, u16 TIM3Compare1)
-{
-  TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
-  TIM_OCInitTypeDef TIM_OCInitStruct;
-  GPIO_InitTypeDef GPIO_InitStruct;
-
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);//?????2???
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//?????3???
-	// These two line have already opened.
-  // RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//??GPIOA??
-  // RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);//????IO??
-
-	// Configure PA.00 and PA.06 at alternative function mode.
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;//??????
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_6;
-  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  //TIM2???????
-  TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;//??????
-  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 7200;//????,?100us????
-  TIM_TimeBaseInitStruct.TIM_Period = TIM2per;//???
-  TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStruct);
-
-  TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Single);//??TIM2??????,???????,??????????
-  TIM_OC1PreloadConfig(TIM2,TIM_OCPreload_Enable);//?????2???1??????
-  TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_OC1Ref);
-
-  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM2;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
-  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
-  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
-  TIM_OCInitStruct.TIM_Pulse = 1;//????1?????
-  TIM_OC1Init(TIM2,&TIM_OCInitStruct);
-
-  TIM_Cmd(TIM2,DISABLE);//?????TIM2
-
-
-  //TIM3?????????????PWM????
-  TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;//??????
-  TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;//??????
-  TIM_TimeBaseInitStruct.TIM_Prescaler = 720;//????,10us????
-  TIM_TimeBaseInitStruct.TIM_Period = TIM3per;//???
-  TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStruct);
-
-  TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Gated);//TIM3?????
-  TIM_SelectMasterSlaveMode(TIM3,TIM_MasterSlaveMode_Enable);//??TIM3?????
-  TIM_SelectInputTrigger(TIM3,TIM_TS_ITR1);//????,?TIM2??
-
-  TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM2;//??????,??TIMx_CNT<TIMx_CCR1???1?????,???????
-  TIM_OCInitStruct.TIM_OutputState = TIM_OutputState_Enable;//OC1????
-  TIM_OCInitStruct.TIM_OCPolarity = TIM_OCPolarity_High;//??????
-  TIM_OCInitStruct.TIM_Pulse = TIM3Compare1;//????1?????
-  TIM_OC1Init(TIM3,&TIM_OCInitStruct);
-
-  TIM_Cmd(TIM3,ENABLE);//??TIM3
-}
-*/
-//??PWM???
-//Cycle:???,??(us)
-//Pulse_Num:?????(??3200)
-
-/**
- * @brief
- * @param
- * @retval
- */
-/*
-void TIM2_TIM3_PWM(u16 Cycle, u16 Pulse_Num)
-{
-  u16 TIM3per = 0;
-  u32 Time = 0;
-  //??TIM3????????????????????50%
-  //??TIM2???????????????
-
-  Time = Cycle * Pulse_Num;
-  Time /= 100;              //????7200,100us????
-  TIM3per = Cycle/10;       //????720,10us????
-
-  TIM_SetAutoreload(TIM2, Time+1);//??TIM2????
-  TIM_SetAutoreload(TIM3, TIM3per-1);//??TIM3????
-  TIM_SetCompare1(TIM3,TIM3per/2);//??????50%
-  TIM_Cmd(TIM2,ENABLE);//??TIM2
-}*/

@@ -37,6 +37,7 @@ float k;// Scale factor K
 int k_dp, k_up;
 float lux, averlux;// Lux(lx) value
 float length, averlength;
+uint16_t motorDelayTime = 1;// 1 second or 2 seconds, default is 1 second.
 // [Debug]
 int auto_manual = 1;// 0 stands for auto, 1 stands for manual. Default is auto.
 //y=-5.648*x^3+35.42*x^2-82.44*x+80.52
@@ -44,7 +45,7 @@ int count = 0;// Counting for the number of impluse.
 int tem = 0;// Temporary parameter.
 int adjustLengthImpluse, openLengthImpluse;
 // [Debug] DO NOT NEED TO ADJUST
-int isadjust = 0;// 1 stands for need to adjust the number of count, 0 stands for do not need.
+int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
 
 /* Function Declaration */
@@ -83,6 +84,7 @@ int Getk_up(void);
 int Getk_dp(void);
 void setPA8_IPU(void);
 void setPA9_IPU(void);
+void setPA10_IF(void);
 
 //float volts, length;
 /**
@@ -94,6 +96,7 @@ int main(void)
 {
 	/* Initialize */
 	// Initialize the pins.
+	setPA10_IF();
 	setPA9_IPU();
 	setPA8_IPU();
 	setPA7_IPU();
