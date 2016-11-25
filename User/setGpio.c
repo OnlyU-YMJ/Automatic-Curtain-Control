@@ -30,6 +30,34 @@ void setPA2_AIN ( void ) {
 }
 
 /**
+ * @brief	Set PA.08 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA9_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_PinSource9;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief	Set PA.08 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA8_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
  * @brief	Set PA7 pin at input pull-up mode.
  * @param 	None
  * @retval	None
@@ -401,13 +429,14 @@ void EXTIInit(void){
 	void NVICInit(void);
 	EXTI_InitTypeDef EXTI_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);// Enable the AFIO clock
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource9);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource8);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
-	// Configure EXTI line 5, 6, 7
-	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line8 | EXTI_Line4;
+	// Configure EXTI line 5, 6, 7,8,9
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 |  EXTI_Line8 | EXTI_Line8 | EXTI_Line4;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;

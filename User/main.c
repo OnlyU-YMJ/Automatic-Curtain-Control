@@ -80,6 +80,8 @@ void MotorOpen(int);
 void MotorClose(int);
 int Getk_up(void);
 int Getk_dp(void);
+void setPA8_IPU(void);
+void setPA9_IPU(void);
 
 //float volts, length;
 /**
@@ -91,6 +93,8 @@ int main(void)
 {
 	/* Initialize */
 	// Initialize the pins.
+    setPA9_IPU();
+	setPA8_IPU();
 	setPA7_IPU();
 	setPA6_IPU();
 	setPA5_IPU();

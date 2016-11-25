@@ -190,6 +190,9 @@ void Delay_Stupid(int number){
 extern float k;
 extern void Delay (__IO uint32_t nTime);
 extern int auto_manual;
+extern int isadjust;
+extern int Getk_up(void);
+extern int Getk_dp(void);
 int test_exti = 0;
 /**
  * @brief		This function handles external interrupt line 4.
@@ -313,7 +316,13 @@ void EXTI9_5_IRQHandler(void){
         }
     }
 	if(EXTI_GetITStatus(EXTI_Line8) != RESET){
+        test_exti = 3;
         count = 0;
         EXTI_ClearITPendingBit(EXTI_Line8);
+    }
+    if(EXTI_GetITStatus(EXTI_Line9) != RESET){
+        test_exti = 3;
+        count = 4500;
+        EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
