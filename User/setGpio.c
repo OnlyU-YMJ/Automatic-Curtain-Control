@@ -297,17 +297,13 @@ u16 GetAdc2(u8 ch){
  * @retval	ADC1 average value.
  */
 u16 GetAdc1Average(u8 ch,u8 times){
-	// ADC_Cmd(ADC1, ENABLE);
 	void delay_ms(uint16_t  MS);
 	u32 temp_val=0;
 	u8 t;
 	for(t=0;t<times;t++)
 	{
 		temp_val+=GetAdc1(ch);
-		//Delay(5);
-		//delay_ms(5);
 	}
-	// ADC_Cmd(ADC1, DISABLE);
 	return temp_val/times;
 }
 

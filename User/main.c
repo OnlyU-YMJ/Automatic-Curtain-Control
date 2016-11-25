@@ -45,7 +45,7 @@ int count = 0;// Counting for the number of impluse.
 int tem = 0;// Temporary parameter.
 int adjustLengthImpluse, openLengthImpluse;
 // [Debug] DO NOT NEED TO ADJUST
-int isadjust = 0;// 1 stands for need to adjust the number of count, 0 stands for do not need.
+int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
 
 /* Function Declaration */
