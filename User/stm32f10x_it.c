@@ -347,3 +347,21 @@ void EXTI9_5_IRQHandler(void){
         EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
+
+/**
+ * @brief		This function handles external interrupt line 15..10.
+ * @param		None
+ * @retval      None
+ */
+extern uint16_t motorDelayTime;
+void EXTI15_10_IRQHandler(void){
+    if(EXTI_GetITStatus(EXTI_Line10) != RESET){
+        test_exti = 4;
+        if(motorDelayTime == 1){
+            motorDelayTime = 2;
+        }
+        else{
+            motorDelayTime = 1;
+        }
+    }
+}
