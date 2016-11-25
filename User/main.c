@@ -45,6 +45,7 @@ int tem = 0;// Temporary parameter.
 int adjustLengthImpluse, openLengthImpluse;
 // [Debug] DO NOT NEED TO ADJUST
 int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
+int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
 
 /* Function Declaration */
 void AdcInit(void);
@@ -93,7 +94,7 @@ int main(void)
 {
 	/* Initialize */
 	// Initialize the pins.
-    setPA9_IPU();
+  setPA9_IPU();
 	setPA8_IPU();
 	setPA7_IPU();
 	setPA6_IPU();

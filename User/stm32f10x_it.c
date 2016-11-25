@@ -264,21 +264,26 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                 GPIO_SetBits(GPIOB, GPIO_Pin_14);
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
-                    // Motor rotates at right direction.
-                    GPIO_SetBits(GPIOB, GPIO_Pin_15);
-                    LEDSD_CLEAR();
-        			LEDSD_UP();
-        			LEDSD_ERROR();
-            		delay_ms(2);
-            		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-                    LEDSD_CLEAR();
-        			LEDSD_DP();
-        			LEDSD_ERROR();
-            		delay_ms(2);
-                    count++;
+                if(stopMotor != 2){// Curtain is open.
+                    while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
+                        // Motor rotates at right direction.
+                        GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                        LEDSD_CLEAR();
+                        LEDSD_UP();
+                        LEDSD_ERROR();
+                        delay_ms(2);
+                        GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                        LEDSD_CLEAR();
+                        LEDSD_DP();
+                        LEDSD_ERROR();
+                        delay_ms(2);
+                        count++;
+                    }
+                    delay_ms(500);
                 }
-                delay_ms(500);
+                else{
+                    stopMotor = 0;// Motor move.
+                }
             }
             EXTI_ClearITPendingBit(EXTI_Line7);
         }
@@ -286,21 +291,26 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                 GPIO_ResetBits(GPIOB, GPIO_Pin_14);
-                while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
-                    // Motor rotates at left direction.
-                    GPIO_SetBits(GPIOB, GPIO_Pin_15);
-                    LEDSD_CLEAR();
-        			LEDSD_UP();
-        			LEDSD_ERROR();
-            		delay_ms(2);
-            		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-                    LEDSD_CLEAR();
-        			LEDSD_DP();
-        			LEDSD_ERROR();
-            		delay_ms(2);
-                    count--;
+                if(stopMotor != 1){// Close curtain
+                    while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                        // Motor rotates at left direction.
+                        GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                        LEDSD_CLEAR();
+                        LEDSD_UP();
+                        LEDSD_ERROR();
+                        delay_ms(2);
+                        GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                        LEDSD_CLEAR();
+                        LEDSD_DP();
+                        LEDSD_ERROR();
+                        delay_ms(2);
+                        count--;
+                    }
+                    delay_ms(500);
                 }
-                delay_ms(500);
+                else{
+                    stopMotor = 0;// Motor move.
+                }
             }
             EXTI_ClearITPendingBit(EXTI_Line6);
         }
@@ -310,19 +320,22 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
                 delay_ms(500);
                 auto_manual = 0;// Change manual mode to automatic mode.
-                isadjust = 0;
+                stopMotor = 0;// Motor move.
+                isadjust = 0;// Need to adjust the current impluse after toggling mode.
             }
             EXTI_ClearITPendingBit(EXTI_Line5);
         }
     }
-	if(EXTI_GetITStatus(EXTI_Line8) != RESET){
+    if(EXTI_GetITStatus(EXTI_Line8) != RESET){
         test_exti = 3;
         count = 0;
+        stopMotor = 1;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line8);
     }
     if(EXTI_GetITStatus(EXTI_Line9) != RESET){
         test_exti = 3;
         count = 4500;
+        stopMotor = 2;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
