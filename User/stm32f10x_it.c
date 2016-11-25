@@ -191,6 +191,7 @@ extern float k;
 extern void Delay (__IO uint32_t nTime);
 extern int auto_manual;
 extern int isadjust;
+extern int stopMotor;
 extern int Getk_up(void);
 extern int Getk_dp(void);
 int test_exti = 0;
@@ -264,7 +265,7 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                 GPIO_SetBits(GPIOB, GPIO_Pin_14);
-                if(stopMotor != 2){// Curtain is open.
+                if(stopMotor != 1){// Curtain is open.
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7) == Bit_RESET){
                         // Motor rotates at right direction.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
@@ -291,7 +292,7 @@ void EXTI9_5_IRQHandler(void){
             delay_ms(500);
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                 GPIO_ResetBits(GPIOB, GPIO_Pin_14);
-                if(stopMotor != 1){// Close curtain
+                if(stopMotor != 2){// Curtain is close.
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                         // Motor rotates at left direction.
                         GPIO_SetBits(GPIOB, GPIO_Pin_15);
@@ -321,20 +322,22 @@ void EXTI9_5_IRQHandler(void){
                 delay_ms(500);
                 auto_manual = 0;// Change manual mode to automatic mode.
                 stopMotor = 0;// Motor move.
-                isadjust = 0;// Need to adjust the current impluse after toggling mode.
+                isadjust = 1;// Need to adjust the current impluse after toggling mode.
             }
             EXTI_ClearITPendingBit(EXTI_Line5);
         }
     }
-    if(EXTI_GetITStatus(EXTI_Line8) != RESET){
+    if(EXTI_GetITStatus(EXTI_Line8) != RESET){// Curtain is closed.
         test_exti = 3;
         count = 0;
+        isadjust = 0;// Do not need to adjust.
         stopMotor = 1;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line8);
     }
-    if(EXTI_GetITStatus(EXTI_Line9) != RESET){
+    if(EXTI_GetITStatus(EXTI_Line9) != RESET){// Curtain is open.
         test_exti = 3;
         count = 4500;
+        isadjust = 0;// Do not need to adjust.
         stopMotor = 2;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line9);
     }

@@ -1,5 +1,5 @@
 Dependencies for Project 'test', Target 'MyFirstSTM32Program': (DO NOT MODIFY !)
-F (.\startup_stm32f10x_md.s)(0x51C7AF80)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x--list .\listing\startup_stm32f10x_md.lst --xref -o .\output\startup_stm32f10x_md.o --depend .\output\startup_stm32f10x_md.d)
+F (.\startup_stm32f10x_md.s)(0x5835B31A)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x--list .\listing\startup_stm32f10x_md.lst --xref -o .\output\startup_stm32f10x_md.o --depend .\output\startup_stm32f10x_md.d)
 F (.\User\stm32f10x_conf.h)(0x00000000)()
 F (.\Libraries\CMSIS\core_cm3.c)(0x4C0C587E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\core_cm3.o --omf_browse .\output\core_cm3.crf --depend .\output\core_cm3.d)
 I (F:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
@@ -725,7 +725,7 @@ I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\stm32f10x_tim.h)(0x4D783BB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\stm32f10x_usart.h)(0x4D783BB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\misc.h)(0x4D783BB4)
-F (.\User\main.c)(0x58330858)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\main.o --omf_browse .\output\main.crf --depend .\output\main.d)
+F (.\User\main.c)(0x58384A8B)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\main.o --omf_browse .\output\main.crf --depend .\output\main.d)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\core_cm3.h)(0x4D523B58)
 I (F:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
@@ -755,7 +755,8 @@ I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\stm32f10x_wwdg.h)(0x4D783BB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\misc.h)(0x4D783BB4)
 I (F:\Keil\ARM\ARMCC\include\math.h)(0x51C7B744)
-F (.\User\stm32f10x_it.c)(0x5833085A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\stm32f10x_it.o --omf_browse .\output\stm32f10x_it.crf --depend .\output\stm32f10x_it.d)
+I (F:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C7B744)
+F (.\User\stm32f10x_it.c)(0x58384A8B)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\stm32f10x_it.o --omf_browse .\output\stm32f10x_it.crf --depend .\output\stm32f10x_it.d)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\User\stm32f10x_it.h)(0x582EF7EB)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\core_cm3.h)(0x4D523B58)
@@ -786,7 +787,7 @@ I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\stm32f10x_wwdg.h)(0x4D783BB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\FWlib\inc\misc.h)(0x4D783BB4)
 F (.\User\stm32f10x_it.h)(0x582EF7EB)()
-F (.\User\setGpio.c)(0x583525DC)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\setgpio.o --omf_browse .\output\setgpio.crf --depend .\output\setgpio.d)
+F (.\User\setGpio.c)(0x5838108E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.\Libraries\FWlib\inc -I.\Libraries\FWlib\src -I.\Libraries\CMSIS-I F:\Keil\ARM\RV31\INC-I F:\Keil\ARM\CMSIS\Include-I F:\Keil\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\setgpio.o --omf_browse .\output\setgpio.crf --depend .\output\setgpio.d)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\stm32f10x.h)(0x4D783CB4)
 I (F:\文件\Single-chip-Mirocomputer_单片机\STM32F103\Program Files\test_program\Libraries\CMSIS\core_cm3.h)(0x4D523B58)
 I (F:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)

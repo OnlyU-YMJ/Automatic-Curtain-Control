@@ -44,7 +44,7 @@ int count = 0;// Counting for the number of impluse.
 int tem = 0;// Temporary parameter.
 int adjustLengthImpluse, openLengthImpluse;
 // [Debug] DO NOT NEED TO ADJUST
-int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
+int isadjust = 0;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
 
 /* Function Declaration */
@@ -156,26 +156,30 @@ int main(void)
 		}
 		else{// At automatic mode.
 			adjustLengthImpluse = (averlength - 26) * 250;
-			openLengthImpluse = 4500 - k * averlux * 208;
-			if(openLengthImpluse > 4500){
-				openLengthImpluse = 4500;
+			// openLengthImpluse = 4500 - k * averlux * 208;
+			openLengthImpluse = 3750 - k * averlux * 184;
+			if(openLengthImpluse > 3750){
+				openLengthImpluse = 3750;
 			}
 			if(openLengthImpluse < 0){
 				openLengthImpluse = 0;
 			}
-			if(count > 4500){
-				count = 4500;
+			// if(count > 4500){
+			// 	count = 4500;
+			// }
+			if(count > 3750){
+				count = 3750;
 			}
 			if(count < 0){
 				count = 0;
 			}
 
-			if(isadjust || count){
-				if(openLengthImpluse - 300 > count){
+			if(!isadjust){// Do not need to adjust.
+				if(openLengthImpluse - 400 > count){
 					MotorOpen(10);
 				}
 				else{
-					if(count - 300 > openLengthImpluse){
+					if(count - 400 > openLengthImpluse){
 						MotorClose(10);
 					}
 					else{
@@ -190,11 +194,11 @@ int main(void)
 					}
 			    }
 			}
-			else{// Start up the product.
+			else{// Need to adjust.
 				if((adjustLengthImpluse - count) > 50){
 					count = adjustLengthImpluse;
 				}
-				isadjust = 1;
+				isadjust = 0;
 			}
 			// TIM2_TIM3_PWM(1000,10);
 		}
