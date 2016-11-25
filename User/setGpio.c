@@ -817,6 +817,7 @@ int Getk_dp(void){
  * @param	None
  * @retval	None
  */
+extern uint16_t motorDelayTime;
 void MotorOpen(int tem){
 	int i = 0;
 	GPIO_SetBits(GPIOB, GPIO_Pin_14);

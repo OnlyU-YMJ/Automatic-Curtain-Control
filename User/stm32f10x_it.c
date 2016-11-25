@@ -363,5 +363,6 @@ void EXTI15_10_IRQHandler(void){
         else{
             motorDelayTime = 1;
         }
+        EXTI_ClearITPendingBit(EXTI_Line10);
     }
 }
