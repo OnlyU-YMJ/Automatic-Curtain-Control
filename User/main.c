@@ -151,7 +151,7 @@ int main(void)
 		}
 		else{// At automatic mode.
 			adjustLengthImpluse = (averlength - 26) * 250;
-			openLengthImpluse = 4500 - k * averlux * 200;
+			openLengthImpluse = 4500 - k * averlux * 208;
 			if(openLengthImpluse > 4500){
 				openLengthImpluse = 4500;
 			}

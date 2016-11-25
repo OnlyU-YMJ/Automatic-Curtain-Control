@@ -179,7 +179,7 @@ void delay_ms(uint16_t  MS){
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 
 /**
- * @brief			This function delays the program.(STUPID Version).
+ * @brief		This function delays the program.(STUPID Version).
  * @param 		None
  * @retval		None
  */
@@ -194,7 +194,7 @@ int test_exti = 0;
 /**
  * @brief		This function handles external interrupt line 4.
  * @param		None
- * @retval	None
+ * @retval      None
  */
 void EXTI4_IRQHandler(void){
     test_exti = 1;
@@ -212,7 +212,7 @@ void EXTI4_IRQHandler(void){
 /**
  * @brief		This function handles external interrupt line 9..5.
  * @param		None
- * @retval	None
+ * @retval      None
  */
 extern int count;
 void LEDSD_ERROR(void);
@@ -307,6 +307,7 @@ void EXTI9_5_IRQHandler(void){
                 while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == Bit_RESET);
                 delay_ms(500);
                 auto_manual = 0;// Change manual mode to automatic mode.
+                isadjust = 0;
             }
             EXTI_ClearITPendingBit(EXTI_Line5);
         }

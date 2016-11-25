@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
 #include "math.h"
+
 /**
  * @brief 	Set PA.01 pin at analogue input mode, 2MHz speed.
  * @param  	None
@@ -29,7 +30,7 @@ void setPA2_AIN ( void ) {
 }
 
 /**
- * @brief		Set PA7 pin at input pull-up mode.
+ * @brief	Set PA7 pin at input pull-up mode.
  * @param 	None
  * @retval	None
  */
@@ -43,7 +44,7 @@ void setPA7_IPU(void){
 }
 
 /**
- * @brief		Set PA6 pin at input pull-up mode.
+ * @brief	Set PA6 pin at input pull-up mode.
  * @param 	None
  * @retval	None
  */
@@ -57,7 +58,7 @@ void setPA6_IPU(void){
 }
 
 /**
- * @brief		Set PA.05 pin at input pull-up mode.
+ * @brief	Set PA.05 pin at input pull-up mode.
  * @param 	None
  * @retval	None
  */
@@ -71,7 +72,7 @@ void setPA5_IPU(void){
 }
 
 /**
- * @brief		Set PA.04 pin at input pull-up mode.
+ * @brief	Set PA.04 pin at input pull-up mode.
  * @param 	None
  * @retval	None
  */
@@ -85,8 +86,8 @@ void setPA4_IPU(void){
 }
 
 /**
- * @brief		Set PB.00~07 pins at ouput push-push mode, 2MHz speed.
- * @param		None
+ * @brief	Set PB.00~07 pins at ouput push-push mode, 2MHz speed.
+ * @param	None
  * @retval	None
  */
 void setPB0_7_OPP(void){
@@ -106,8 +107,8 @@ void setPB0_7_OPP(void){
 }
 
 /**
- * @brief		Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
- * @param		None
+ * @brief	Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
+ * @param	None
  * @retval	None
  */
 void setPB10_11_OPP(void){
@@ -121,8 +122,8 @@ void setPB10_11_OPP(void){
 }
 
 /**
- * @brief		Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
- * @param		None
+ * @brief	Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
+ * @param	None
  * @retval	None
  */
 void setPA11_12_OPP(void){
@@ -136,8 +137,8 @@ void setPA11_12_OPP(void){
 }
 
 /**
- * @brief		Set PB.14 and PB.15 pins at ouput push-push mode, 2MHz speed.
- * @param		None
+ * @brief	Set PB.14 and PB.15 pins at ouput push-push mode, 2MHz speed.
+ * @param	None
  * @retval	None
  */
 void setPB14_15_OPP(void){
@@ -150,7 +151,7 @@ void setPB14_15_OPP(void){
 }
 
 /**
- * @brief		Delay the program.
+ * @brief	Delay the program.
  * @param 	nTime: Specifies the delay time length, in milliseconds.
  * @retval	None
  */
@@ -164,7 +165,7 @@ void Delay (__IO uint32_t nTime)
 }
 
 /**
- * @brief		Initialize the ADC1 & ADC2.
+ * @brief	Initialize the ADC1 & ADC2.
  * @param 	None
  * @retval	None
  */
@@ -215,7 +216,7 @@ void  AdcInit(void)
 
 
 /**
- * @brief		Get ADC1 value.
+ * @brief	Get ADC1 value.
  * @param 	ch: Choose the ADC channel.
  * @retval	ADC conversion value.
  */
@@ -247,9 +248,9 @@ u16 GetAdc2(u8 ch){
 }
 
 /**
- * @brief		Get ADC1 average value.
+ * @brief	Get ADC1 average value.
  * @param 	ADC_Channel_x
- * @param		times
+ * @param	times
  * @retval	ADC1 average value.
  */
 u16 GetAdc1Average(u8 ch,u8 times){
@@ -268,9 +269,9 @@ u16 GetAdc1Average(u8 ch,u8 times){
 }
 
 /**
- * @brief		Get ADC1 average value.
+ * @brief	Get ADC1 average value.
  * @param 	ADC_Channel_x
- * @param		times
+ * @param	times
  * @retval	ADC2 average value.
  */
 u16 GetAdc2Average(u8 ch,u8 times){
@@ -289,7 +290,7 @@ u16 GetAdc2Average(u8 ch,u8 times){
 }
 
 /**
- * @brief		Get average lux value from analogue input pin PA1.
+ * @brief	Get average lux value from analogue input pin PA1.
  * @param 	Aver_Analogue_In: The average analogue input value.
  * @retval	The average value of lux.
  */
@@ -304,7 +305,7 @@ float CalAverageLux(u16 Aver_Analogue_In){
 }
 
 /**
- * @brief		Get lux value from analogue input pin PA1.
+ * @brief	Get lux value from analogue input pin PA1.
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
@@ -318,10 +319,10 @@ float CalLux(u16 Analogue_In){
 	return lux;
 }
 
-/* Infrared Ranging Sensor */
+/* ------------ Infrared Ranging Sensor ------------ */
 
 /**
- * @brief		Get length from analogue input pin PA2.
+ * @brief	Get length from analogue input pin PA2.
  * @param 	Analogue_In: The analogue input value.
  * @retval	The average value of lux.
  */
@@ -333,7 +334,7 @@ float CalLength(u16 Analogue_In){
 }
 
 /**
- * @brief		Get average lux value from analogue input pin PA1.
+ * @brief	Get average lux value from analogue input pin PA1.
  * @param 	Aver_Analogue_In: The average analogue input value.
  * @retval	The average value of lux.
  */
@@ -368,8 +369,8 @@ float CalAverageLength(u16 Aver_Analogue_In){
 // }
 
 /**
- * @brief		Initialize SysTick, and unit is milllisecond.
- * @param		None
+ * @brief	Initialize SysTick, and unit is milllisecond.
+ * @param	None
  * @retval	None
  */
 void SysTickInit(void){
@@ -381,8 +382,8 @@ void SysTickInit(void){
 }
 
 /**
- * @brief		Decrements the TimingDelay variable.
- * @param		None
+ * @brief	Decrements the TimingDelay variable.
+ * @param	None
  * @retval	None
  */
 void TimingDelay_Decrement(void){
@@ -392,8 +393,8 @@ void TimingDelay_Decrement(void){
 }
 
 /**
- * @brief		Initialize the EXTI(External Interrupt).
- * @param		None
+ * @brief	Initialize the EXTI(External Interrupt).
+ * @param	None
  * @retval	None
  */
 void EXTIInit(void){
@@ -417,8 +418,8 @@ void EXTIInit(void){
 }
 
 /**
- * @brief		Initialize the NVIC(Nested Vector Interrupt Controller).
- * @param		None
+ * @brief	Initialize the NVIC(Nested Vector Interrupt Controller).
+ * @param	None
  * @retval	None
  */
 void NVICInit(void){
@@ -464,7 +465,7 @@ void NVICInit(void){
 /**
  * @brief		Test the LED segment display.
  * @param		None
- * @retval	None
+ * @retval		None
  */
 void LEDSD_Test(void){
 	void LEDSD_8(void);
@@ -564,15 +565,15 @@ void LEDSD_X(int x){
 void LEDSD_0(void){
 	// The number 0.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LD |
-											LED_LU |
-											LED_RD);
+						LED_LD |
+						LED_LU |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU | LED_RU);
 }
 
 /**
- * @brief		Light number 1 on LED segment display.
- * @param		None
+ * @brief	Light number 1 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_1(void){
@@ -582,76 +583,76 @@ void LEDSD_1(void){
 }
 
 /**
- * @brief		Light number 2 on LED segment display.
- * @param		None
+ * @brief	Light number 2 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_2(void){
 	// The number 2.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LD |
-											LED_CC );
+						LED_LD |
+						LED_CC );
 	GPIO_SetBits(GPIOA, LED_CU | LED_RU);
 }
 
 /**
- * @brief		Light number 3 on LED segment display.
- * @param		None
+ * @brief	Light number 3 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_3(void){
 	// The number 3.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_CC |
-											LED_RD);
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU | LED_RU);
 }
 
 /**
- * @brief		Light number 4 on LED segment display.
- * @param		None
+ * @brief	Light number 4 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_4(void){
 	// The number 4.
 	GPIO_SetBits(GPIOB, LED_LU |
-											LED_CC |
-											LED_RD);
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_RU);
 }
 
 /**
- * @brief		Light number 5 on LED segment display.
- * @param		None
+ * @brief	Light number 5 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_5(void){
 	// The number 5.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LU |
-											LED_CC |
-											LED_RD);
+						LED_LU |
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU);
 }
 
 /**
- * @brief		Light number 6 on LED segment display.
- * @param		None
+ * @brief	Light number 6 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_6(void){
 	// The number 6.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LD |
-											LED_LU |
-											LED_CC |
-											LED_RD);
+						LED_LD |
+						LED_LU |
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU);
 }
 
 /**
- * @brief		Light number 7 on LED segment display.
- * @param		None
+ * @brief	Light number 7 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_7(void){
@@ -661,37 +662,37 @@ void LEDSD_7(void){
 }
 
 /**
- * @brief		Light number 8 on LED segment display.
- * @param		None
+ * @brief	Light number 8 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_8(void){
 	// The number 8.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LD |
-											LED_LU |
-											LED_CC |
-											LED_RD);
+						LED_LD |
+						LED_LU |
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU | LED_RU);
 }
 
 /**
- * @brief		Light number 9 on LED segment display.
- * @param		None
+ * @brief	Light number 9 on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_9(void){
 	// The number 9.
 	GPIO_SetBits(GPIOB, LED_CD |
-											LED_LU |
-											LED_CC |
-											LED_RD);
+						LED_LU |
+						LED_CC |
+						LED_RD);
 	GPIO_SetBits(GPIOA, LED_CU | LED_RU);
 }
 
 /**
- * @brief		Light "-" on LED segment display.
- * @param		None
+ * @brief	Light "-" on LED segment display.
+ * @param	None
  * @retval	None
  */
 void LEDSD_ERROR(void){
@@ -700,9 +701,9 @@ void LEDSD_ERROR(void){
 }
 
 /**
- * @brief		Clear all the display numbers.
- * @param		None
- * @retval		None
+ * @brief	Clear all the display numbers.
+ * @param	None
+ * @retval	None
  */
 void LEDSD_CLEAR(void){
 	GPIO_ResetBits(GPIOB, LED_CC | LED_CD | LED_LU | LED_LD | LED_RD | LED_POINT);
@@ -715,7 +716,7 @@ extern int count;
 void delay_ms(uint16_t);
 
 /**
- * @brief			This function delays the program, in millisecond.
+ * @brief		This function delays the program, in millisecond.
  * @param 		MS: The number of millisecond.
  * @retval		None
  */
