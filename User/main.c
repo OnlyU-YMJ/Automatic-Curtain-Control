@@ -47,6 +47,7 @@ int adjustLengthImpluse, openLengthImpluse;
 // [Debug] DO NOT NEED TO ADJUST
 int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
+u8 btMessage[10]={0};// Bluetooth incoming message array.
 
 /* Function Declaration */
 void AdcInit(void);
@@ -83,8 +84,9 @@ void MotorClose(int);
 int Getk_up(void);
 int Getk_dp(void);
 void setPA8_IPU(void);
-void setPA9_IPU(void);
+void setPA9_AFPP(void);
 void setPA10_IF(void);
+void USART1_Config(void);
 
 //float volts, length;
 /**
@@ -97,7 +99,8 @@ int main(void)
 	/* Initialize */
 	// Initialize the pins.
 	setPA10_IF();
-	setPA9_IPU();
+	setPA9_AFPP();
+	USART1_Config();
 	setPA8_IPU();
 	setPA7_IPU();
 	setPA6_IPU();
@@ -112,8 +115,6 @@ int main(void)
 	SysTickInit();
 	AdcInit();
 	LEDSD_Test();
-	// PWMInit();
-	// Motor_Init(10000,1000,1);
 	// Initialize the parameters.
 	temt6000 = 0;
 	avertemt6000 = 0;

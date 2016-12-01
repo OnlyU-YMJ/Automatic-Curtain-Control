@@ -36,7 +36,7 @@ void setPA2_AIN ( void ) {
  */
 void setPA10_IF(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
@@ -45,15 +45,15 @@ void setPA10_IF(void){
 
 
 /**
- * @brief	Set PA.08 pin at input pull-up mode.
+ * @brief	Set PA.09 pin at alternate function push-pull output mode.
  * @param 	None
  * @retval	None
  */
-void setPA9_IPU(void){
+void setPA9_AFPP(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1 | RCC_APB2Periph_AFIO, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
@@ -440,15 +440,15 @@ void EXTIInit(void){
 	void NVICInit(void);
 	EXTI_InitTypeDef EXTI_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);// Enable the AFIO clock
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource10);
-    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource9);
+	// GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource10);
+    // GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource9);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource8);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
 	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource5);
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource4);
-	// Configure EXTI line 5, 6, 7, 8, 9, 10
-	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 |  EXTI_Line8 | EXTI_Line9 | EXTI_Line4 | EXTI_Line10;
+	// Configure EXTI line 5, 6, 7, 8
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 |  EXTI_Line8 | EXTI_Line4 ;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
@@ -469,24 +469,34 @@ void NVICInit(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The second pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The second sub priority
 	NVIC_Init(&NVIC_InitStructure);
 
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The highest pre-emption priority
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The second pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The second sub priority
 	NVIC_Init(&NVIC_InitStructure);
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The highest sub priority
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;// The second pre-emption priority
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;// The second sub priority
 	NVIC_Init(&NVIC_InitStructure);
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// The highest pre-emption priority.
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;// The highest sub priority.
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	// USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+	USART_Cmd(USART1, ENABLE);
 }
 
 
@@ -863,4 +873,22 @@ void MotorClose(int tem){
 		delay_ms_SB(motorDelayTime);
 		i++;
 	}
+}
+
+/* ------------ Bluetooth ------------ */
+/**
+ * @brief	Configure USART line 1.
+ * @param	None
+ * @retval	None
+ */
+void USART1_Config(void){
+	// RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+	USART_InitTypeDef USART_InitStructure;
+	USART_InitStructure.USART_BaudRate = 9600;
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+	USART_InitStructure.USART_Parity = USART_Parity_No;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	USART_Init(USART1, &USART_InitStructure);
 }

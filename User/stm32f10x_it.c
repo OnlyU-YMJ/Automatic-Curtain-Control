@@ -367,16 +367,35 @@ void EXTI9_5_IRQHandler(void){
  * @param		None
  * @retval      None
  */
-void EXTI15_10_IRQHandler(void){
-    if(EXTI_GetITStatus(EXTI_Line10) != RESET){
-        test_exti = 4;
-        delay_ms(1000);
-        if(motorDelayTime == 1){
-            motorDelayTime = 3;
+// void EXTI15_10_IRQHandler(void){
+//     if(EXTI_GetITStatus(EXTI_Line10) != RESET){
+//         test_exti = 4;
+//         delay_ms(1000);
+//         if(motorDelayTime == 1){
+//             motorDelayTime = 3;
+//         }
+//         else{
+//             motorDelayTime = 1;
+//         }
+//         EXTI_ClearITPendingBit(EXTI_Line10);
+//     }
+// }
+
+extern u8 btMessage[10];
+int charCount = 0;
+void USART1_IRQHandler(void){
+    // int RX_status;
+    test_exti = 5;
+	delay_ms(1000);
+	// RX_status = USART_GetFlagStatus(USART1, USART_FLAG_RXNE);
+	if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE)) {
+		btMessage[charCount++] = USART_ReceiveData(USART1);
+        if(charCount == 10){
+            charCount = 0;
         }
-        else{
-            motorDelayTime = 1;
-        }
-        EXTI_ClearITPendingBit(EXTI_Line10);
-    }
+		// USART_SendData(USART1 , USART_ReceiveData(USART1)+1);
+		while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+		delay_ms(1000);
+	}
 }
+if(btMessage[i] == '1')
