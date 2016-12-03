@@ -1,5 +1,7 @@
-<<<<<<< HEAD
+
 #Automatic-Curtain-Control
+
+Problem D of Competition for Electronic Design
 
 ## How to use
 
@@ -9,14 +11,6 @@
 - Download `.hex` to your single chip computer.
 - Enjoy it :)
 
-## Author
-
-[Triple-Z](https://coding.net/u/triplez)
-
 ## Copyright
 
-Closed-Source `Temporarily`
-=======
-# Automatic-Curtain-Control
-Problem D of Competition for Electronic Design
->>>>>>> fd72ceb438dfde43c2b1dd66430900ef1eecba02
+Copyright(c)2016 TripleZ([GitHub](https://github.com/Triple-Z)|[Coding](https://coding.net/u/triplez)))
