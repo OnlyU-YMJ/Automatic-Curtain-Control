@@ -2,6 +2,84 @@
 #include "math.h"
 
 /**
+ * @brief	Set PA7 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+void setPA0_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+void setPB12_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+void setPB13_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief	Set PA7 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+
+void setPB3_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+
+/**
+ * @brief	Set PA7 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+
+void setPB4_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+ * @brief	Set PA7 pin at input pull-up mode.
+ * @param 	None
+ * @retval	None
+ */
+
+void setPA3_OPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
  * @brief 	Set PA.01 pin at analogue input mode, 2MHz speed.
  * @param  	None
  * @retval 	None
@@ -30,10 +108,38 @@ void setPA2_AIN ( void ) {
 }
 
 /**
- * @brief	Set PA.10 pin at floating input mode.
+ * @brief	Set PA.04~08 pin at input pull-up mode.
  * @param 	None
  * @retval	None
  */
+void setPA4_8_IPU(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_7 | GPIO_Pin_6 | GPIO_Pin_5| GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+* @brief	Set PA.09 pin at alternate function push-pull output mode.
+* @param 	None
+* @retval	None
+*/
+void setPA9_AFPP(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1 | RCC_APB2Periph_AFIO, ENABLE);// Enable the USART & AFIO clock.
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+/**
+* @brief	Set PA.10 pin at floating input mode.
+* @param 	None
+* @retval	None
+*/
 void setPA10_IF(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE);
@@ -43,31 +149,74 @@ void setPA10_IF(void){
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
+// /**
+//  * @brief	Set PA7 pin at input pull-up mode.
+//  * @param 	None
+//  * @retval	None
+//  */
+// void setPA7_IPU(void){
+// 	GPIO_InitTypeDef GPIO_InitStructure;
+// 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+// 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+// }
+//
+// /**
+//  * @brief	Set PA6 pin at input pull-up mode.
+//  * @param 	None
+//  * @retval	None
+//  */
+// void setPA6_IPU(void){
+// 	GPIO_InitTypeDef GPIO_InitStructure;
+// 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+// 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+// }
+//
+// /**
+//  * @brief	Set PA.05 pin at input pull-up mode.
+//  * @param 	None
+//  * @retval	None
+//  */
+// void setPA5_IPU(void){
+// 	GPIO_InitTypeDef GPIO_InitStructure;
+// 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+// 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+// }
+//
+// /**
+//  * @brief	Set PA.04 pin at input pull-up mode.
+//  * @param 	None
+//  * @retval	None
+//  */
+// void setPA4_IPU(void){
+// 	GPIO_InitTypeDef GPIO_InitStructure;
+// 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+// 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+// }
+
 
 /**
- * @brief	Set PA.09 pin at alternate function push-pull output mode.
- * @param 	None
- * @retval	None
- */
-void setPA9_AFPP(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1 | RCC_APB2Periph_AFIO, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-/**
- * @brief	Set PA.08 pin at input pull-up mode.
- * @param 	None
- * @retval	None
- */
-void setPA8_IPU(void){
+* @brief	Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
+* @param	None
+* @retval	None
+*/
+void setPA11_12_OPP(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 |
+	GPIO_Pin_11 ;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
@@ -77,74 +226,32 @@ void setPA8_IPU(void){
  * @param 	None
  * @retval	None
  */
-void setPA7_IPU(void){
+void setPA15_IPU(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
 /**
- * @brief	Set PA6 pin at input pull-up mode.
- * @param 	None
- * @retval	None
- */
-void setPA6_IPU(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-/**
- * @brief	Set PA.05 pin at input pull-up mode.
- * @param 	None
- * @retval	None
- */
-void setPA5_IPU(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-/**
- * @brief	Set PA.04 pin at input pull-up mode.
- * @param 	None
- * @retval	None
- */
-void setPA4_IPU(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-/**
- * @brief	Set PB.00~07 pins at ouput push-push mode, 2MHz speed.
- * @param	None
- * @retval	None
- */
+* @brief	Set PB.00~07 pins at ouput push-push mode, 2MHz speed.
+* @param	None
+* @retval	None
+*/
 void setPB0_7_OPP(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 |
-																GPIO_Pin_1 |
-																GPIO_Pin_2 |
-																GPIO_Pin_3 |
-																GPIO_Pin_4 |
-																GPIO_Pin_5 |
-																GPIO_Pin_6 |
-																GPIO_Pin_7 ;
+	GPIO_Pin_1 |
+	GPIO_Pin_2 |
+	GPIO_Pin_3 |
+	GPIO_Pin_4 |
+	GPIO_Pin_5 |
+	GPIO_Pin_6 |
+	GPIO_Pin_7 ;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
@@ -164,20 +271,6 @@ void setPB10_11_OPP(void){
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
 
-/**
- * @brief	Set PB.10 and PB.11 pins at ouput push-push mode, 2MHz speed.
- * @param	None
- * @retval	None
- */
-void setPA11_12_OPP(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 |
-																GPIO_Pin_11 ;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
 
 /**
  * @brief	Set PB.14 and PB.15 pins at ouput push-push mode, 2MHz speed.
@@ -825,25 +918,72 @@ int Getk_dp(void){
  */
 extern uint16_t motorDelayTime;
 void MotorOpen(int tem){
-	int i = 0;
-	GPIO_SetBits(GPIOB, GPIO_Pin_14);
+	// int i = 0;
+	// GPIO_SetBits(GPIOB, GPIO_Pin_14);
 	for(; tem > 0; tem--){
-		count++;
-		GPIO_SetBits(GPIOB, GPIO_Pin_15);
-		if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+		count += 4;
+
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
 			LEDSD_CLEAR();
 			LEDSD_UP();
 			LEDSD_X(k_up);
-		}
-		delay_ms_SB(motorDelayTime);
-		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-		if(i % 2 == 0){
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
 			LEDSD_CLEAR();
 			LEDSD_DP();
 			LEDSD_X(k_dp);
-		}
-		delay_ms_SB(motorDelayTime);
-		i++;
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+
+
+		// GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		// if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+		// 	LEDSD_CLEAR();
+		// 	LEDSD_UP();
+		// 	LEDSD_X(k_up);
+		// }
+		// delay_ms_SB(motorDelayTime);
+		// GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		// if(i % 2 == 0){
+		// 	LEDSD_CLEAR();
+		// 	LEDSD_DP();
+		// 	LEDSD_X(k_dp);
+		// }
+		// delay_ms_SB(motorDelayTime);
+		// i++;
 	}// for
 }
 
@@ -853,25 +993,74 @@ void MotorOpen(int tem){
  * @retval	None
  */
 void MotorClose(int tem){
-	int i = 0;
-	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
+	// int i = 0;
+	// GPIO_ResetBits(GPIOB, GPIO_Pin_14);
 	for(; tem > 0; tem--){
-		count--;
-		GPIO_SetBits(GPIOB, GPIO_Pin_15);
-		if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+		count -= 4;
+
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
 			LEDSD_CLEAR();
 			LEDSD_UP();
 			LEDSD_X(k_up);
-		}
-		delay_ms_SB(motorDelayTime);
-		GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-		if(i % 2 == 0){
+	GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
 			LEDSD_CLEAR();
 			LEDSD_DP();
 			LEDSD_X(k_dp);
-		}
-		delay_ms_SB(motorDelayTime);
-		i++;
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+
+
+
+		// GPIO_SetBits(GPIOB, GPIO_Pin_15);
+		// if(i % 2 == 0){// LEDSD Flash frequency: 25Hz
+		// 	LEDSD_CLEAR();
+		// 	LEDSD_UP();
+		// 	LEDSD_X(k_up);
+		// }
+		// delay_ms_SB(motorDelayTime);
+		// GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+		// if(i % 2 == 0){
+		// 	LEDSD_CLEAR();
+		// 	LEDSD_DP();
+		// 	LEDSD_X(k_dp);
+		// }
+		// delay_ms_SB(motorDelayTime);
+		// i++;
 	}
 }
 
@@ -891,4 +1080,192 @@ void USART1_Config(void){
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART1, &USART_InitStructure);
+}
+
+extern u8 btMessage[10];
+extern int k_up, k_dp;
+extern float k;
+extern int charCount;
+extern char ch;
+// int test = 0;
+extern int stopMotor;
+extern int auto_manual;
+extern int isadjust;
+
+void BT_Update(void){
+	if(ch == 's'){// Stop motor.
+		// test = 0;
+	}
+	if(ch == 'c'){// Close the curtain.
+		if(stopMotor != 1){// Curtain is not fully closed.
+			while(1){
+				if(stopMotor == 2){
+					stopMotor = 0;
+				}
+				// Close curtain motor.
+			
+			GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+	GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+				// test++;
+				if(ch == 's'){
+					break;
+				}
+				if(stopMotor == 1){
+					break;
+				}
+				count -= 4;
+			}
+		}
+		else{// Curtain is fully closed || Curtain is closed & open.
+			if(count != 0){
+				stopMotor = 0;// Motor move.
+			}
+		}
+	}
+
+	if(ch == 'o'){// Open curtain.
+		if(stopMotor != 2){// Curtain is not fully open.
+			while(1){
+				if(stopMotor == 1){
+					stopMotor = 0;
+				}
+				// Open curtain motor.
+			
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_X(k_up);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms_SB(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_X(k_dp);
+
+
+				if(ch == 's'){
+					break;
+				}
+				if(stopMotor == 2){
+					break;
+				}
+				count += 4;
+			}
+		}
+		else{// Curtain is fully open || curtain has been fully open then partially closed.
+			if(count != 21000){
+				stopMotor = 0;// Motor move.
+			}
+		}
+	}
+	// if(ch == 'a'){// Change to automatic mode.
+	// 	auto_manual = 0;// Change manual mode to automatic mode.
+	// 	stopMotor = 0;// Motor move.
+	// 	isadjust = 1;// Need to adjust the current impluse after toggling mode.
+	// }
+	// if(ch == 'm'){// Change to maunal mode.
+	// 	auto_manual = 1;// Change automatic mode to manual mode.
+	// }
+	// if(ch == 'k'){// Set the scale factor k.
+	// 	charCount = 0;
+	// 	btMessage[charCount] = ch;
+	// 	charCount++;
+	// 	if(charCount == 10){
+	// 		charCount = 0;
+	// 	}
+	// }
+	// if(ch >= '0' && ch <= '9'){// Set the scale factor k.
+	// 	if(charCount >=1 && charCount <= 3){
+	// 		btMessage[charCount] = ch;
+	// 		charCount++;
+	// 	}
+	// 	else{
+	// 		if(charCount >= 4 && charCount <= 6){
+	// 			btMessage[charCount] = ch;
+	// 			charCount++;
+	// 			// Update scale factor k.
+	// 			k_up = btMessage[1] - '0';
+	// 			k_dp = btMessage[4] - '0';
+	// 			k = k_up + 0.1 * k_dp;
+	// 		}
+	// 	}
+	// }
+	delay_ms_SB(800);
 }

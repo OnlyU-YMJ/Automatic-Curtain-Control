@@ -220,6 +220,7 @@ void EXTI4_IRQHandler(void){
  */
 extern int count;
 extern uint16_t motorDelayTime;
+extern int k_dp, k_up;
 void LEDSD_ERROR(void);
 void LEDSD_UP(void);
 void LEDSD_DP(void);
@@ -273,25 +274,71 @@ void EXTI9_5_IRQHandler(void){
                             stopMotor = 0;
                         }
                         // Open curtain.
-                        GPIO_SetBits(GPIOB, GPIO_Pin_15);
-                        LEDSD_CLEAR();
-                        LEDSD_UP();
-                        LEDSD_ERROR();
-                        delay_ms(motorDelayTime);
-                        GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-                        LEDSD_CLEAR();
-                        LEDSD_DP();
-                        LEDSD_ERROR();
-                        delay_ms(motorDelayTime);
+ count+=4;
+                    		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		//GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_ERROR();
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_ERROR();
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_4);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_ERROR();
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_ERROR();
+
+                        // GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                        // LEDSD_CLEAR();
+                        // LEDSD_UP();
+                        // LEDSD_ERROR();
+                        // delay_ms(motorDelayTime);
+                        // GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                        // LEDSD_CLEAR();
+                        // LEDSD_DP();
+                        // LEDSD_ERROR();
+                        // delay_ms(motorDelayTime);
                         if(stopMotor == 2){
                             break;
                         }
-                        count++;
+                        count += 4;
                     }
                     delay_ms(500);
                 }
                 else{// Curtain is fully open || curtain has been fully open then partially closed.
-                    if(count != 3750){
+                    if(count != 21000){
                         stopMotor = 0;// Motor move.
                     }
                 }
@@ -303,25 +350,72 @@ void EXTI9_5_IRQHandler(void){
             if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
                 GPIO_ResetBits(GPIOB, GPIO_Pin_14);
                 if(stopMotor != 1){// Curtain is not fully closed.
-                    if(stopMotor == 2){
-                        stopMotor = 0;
-                    }
                     while(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6) == Bit_RESET){
+                        if(stopMotor == 2){
+                            stopMotor = 0;
+                        }
                         // Close curtain.
-                        GPIO_SetBits(GPIOB, GPIO_Pin_15);
-                        LEDSD_CLEAR();
-                        LEDSD_UP();
-                        LEDSD_ERROR();
-                        delay_ms(motorDelayTime);
-                        GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-                        LEDSD_CLEAR();
-                        LEDSD_DP();
-                        LEDSD_ERROR();
-                        delay_ms(motorDelayTime);
+count-=4;
+   	GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_ERROR();
+	  GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_15);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_ERROR();
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_SetBits(GPIOB,GPIO_Pin_14);
+		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_UP();
+			LEDSD_ERROR();
+		
+				GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(1);
+		GPIO_ResetBits(GPIOB,GPIO_Pin_15);
+		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+	//	GPIO_SetBits(GPIOA,GPIO_Pin_0);
+		delay_ms(3);
+			LEDSD_CLEAR();
+			LEDSD_DP();
+			LEDSD_ERROR();
+
+                        // GPIO_SetBits(GPIOB, GPIO_Pin_15);
+                        // LEDSD_CLEAR();
+                        // LEDSD_UP();
+                        // LEDSD_ERROR();
+                        // delay_ms(motorDelayTime);
+                        // GPIO_ResetBits(GPIOB, GPIO_Pin_15);
+                        // LEDSD_CLEAR();
+                        // LEDSD_DP();
+                        // LEDSD_ERROR();
+                        // delay_ms(motorDelayTime);
                         if(stopMotor == 1){
                             break;
                         }
-                        count--;
+                        count-=4;
                     }
                     delay_ms(500);
                 }
@@ -355,7 +449,7 @@ void EXTI9_5_IRQHandler(void){
     }
     if(EXTI_GetITStatus(EXTI_Line9) != RESET){// Curtain is open.
         test_exti = 3;
-        count = 3750;
+        count = 21000;
         isadjust = 0;// Do not need to adjust.
         stopMotor = 2;// Stop motor.
         EXTI_ClearITPendingBit(EXTI_Line9);
@@ -368,7 +462,7 @@ void EXTI9_5_IRQHandler(void){
  * @retval      None
  */
 // void EXTI15_10_IRQHandler(void){
-//     if(EXTI_GetITStatus(EXTI_Line10) != RESET){
+//     if(EXTI_GetITStatus(                                   EXTI_Line10) != RESET){
 //         test_exti = 4;
 //         delay_ms(1000);
 //         if(motorDelayTime == 1){
@@ -382,20 +476,95 @@ void EXTI9_5_IRQHandler(void){
 // }
 
 extern u8 btMessage[10];
-int charCount = 0;
+extern int k_up, k_dp;
+extern float k;
+extern int charCount;
+extern char ch;
 void USART1_IRQHandler(void){
     // int RX_status;
+    // int i;
     test_exti = 5;
 	delay_ms(1000);
 	// RX_status = USART_GetFlagStatus(USART1, USART_FLAG_RXNE);
 	if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE)) {
-		btMessage[charCount++] = USART_ReceiveData(USART1);
-        if(charCount == 10){
-            charCount = 0;
-        }
+        ch = USART_ReceiveData(USART1);
+        // if(ch == 's'){// Stop motor.
+        //     test = 0;
+        // }
+        // if(ch == 'c'){// Close the curtain.
+        //     if(stopMotor != 1){// Curtain is not fully closed.
+        //         for(i = 4200; i > 0; i--){
+        //             if(stopMotor == 2){
+        //                 stopMotor = 0;
+        //             }
+        //             // Close curtain motor.
+        //
+        //             if(stopMotor == 1){
+        //                 break;
+        //             }
+        //             count --;
+        //         }
+        //     }
+        //     else{// Curtain is fully closed || Curtain is closed & open.
+        //         if(count != 0){
+        //             stopMotor = 0;// Motor move.
+        //         }
+        //     }
+        // }
+        // if(ch == 'o'){// Open curtain.
+        //     if(stopMotor != 2){// Curtain is not fully open.
+        //         for(i = 4200; i > 0; i--){
+        //             if(stopMotor == 1){
+        //                 stopMotor = 0;
+        //             }
+        //             // Open curtain motor.
+        //
+        //             if(stopMotor == 2){
+        //                 break;
+        //             }
+        //             count++;
+        //         }
+        //     }
+        //     else{// Curtain is fully open || curtain has been fully open then partially closed.
+        //         if(count != 21000){
+        //             stopMotor = 0;// Motor move.
+        //         }
+        //     }
+        // }
+        if(ch == 'a'){// Change to automatic mode.
+    		auto_manual = 0;// Change manual mode to automatic mode.
+    		stopMotor = 0;// Motor move.
+    	//	isadjust = 1;// Need to adjust the current impluse after toggling mode.
+    	}
+    	if(ch == 'm'){// Change to maunal mode.
+    		auto_manual = 1;// Change automatic mode to manual mode.
+    	}
+    	if(ch == 'k'){// Set the scale factor k.
+    		charCount = 0;
+    		btMessage[charCount] = ch;
+    		charCount++;
+    		if(charCount == 10){
+    			charCount = 0;
+    		}
+    	}
+    	if(ch >= '0' && ch <= '9'){// Set the scale factor k.
+    		if(charCount == 1){
+    			btMessage[charCount] = ch;
+    			charCount++;
+    		}
+    		else{
+    			if(charCount == 2){
+    				btMessage[charCount] = ch;
+    				charCount++;
+    				// Update scale factor k.
+    				k_up = btMessage[1] - '0';
+    				k_dp = btMessage[2] - '0';
+    				k = k_up + 0.1 * k_dp;
+    			}
+    		}
+    	}
 		// USART_SendData(USART1 , USART_ReceiveData(USART1)+1);
 		while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 		delay_ms(1000);
 	}
 }
-if(btMessage[i] == '1')

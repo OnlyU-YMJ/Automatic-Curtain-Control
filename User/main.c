@@ -48,6 +48,8 @@ int adjustLengthImpluse, openLengthImpluse;
 int isadjust = 1;// 1 stands for need to adjust the number of count, 0 stands for do not need.
 int stopMotor = 0;// 0 stands for move, 1 stands for close stop, 2 stands for open stop. Default is move.
 u8 btMessage[10]={0};// Bluetooth incoming message array.
+char ch;
+int charCount = 0;
 
 /* Function Declaration */
 void AdcInit(void);
@@ -59,10 +61,7 @@ u16 GetAdc2Average(u8, u8);
 float CalAverageLux(u16);
 float CalLux(u16);
 int KeyScan(GPIO_TypeDef*, u16);
-void setPA7_IPU(void);
-void setPA6_IPU(void);
 void SysTickInit(void);
-void setPA5_IPU(void);
 void EXTIInit(void);
 void setPB0_7_OPP(void);
 void setPB10_11_OPP(void);
@@ -77,16 +76,23 @@ void LEDSD_CLEAR(void);
 void PWMInit(void);
 float CalLength(u16);
 float CalAverageLength(u16);
-void setPA4_IPU(void);
 void setPB14_15_OPP(void);
 void MotorOpen(int);
 void MotorClose(int);
 int Getk_up(void);
 int Getk_dp(void);
-void setPA8_IPU(void);
+void setPA4_8_IPU(void);
 void setPA9_AFPP(void);
 void setPA10_IF(void);
 void USART1_Config(void);
+void setPA0_OPP(void);
+void setPA3_OPP(void);
+void setPA15_IPU(void);
+void setPB3_OPP(void);
+void setPB4_OPP(void);
+void setPB12_OPP(void);
+void setPB13_OPP(void);
+void BT_Update(void);
 
 //float volts, length;
 /**
@@ -98,17 +104,24 @@ int main(void)
 {
 	/* Initialize */
 	// Initialize the pins.
+	setPA15_IPU();
+	setPA0_OPP();
+	setPB3_OPP();
+	setPB4_OPP();
+	setPB12_OPP();
+	setPB13_OPP();
+	setPA3_OPP();
 	setPA10_IF();
 	setPA9_AFPP();
 	USART1_Config();
-	setPA8_IPU();
-	setPA7_IPU();
-	setPA6_IPU();
-	setPA5_IPU();
-	setPA4_IPU();
+	setPA4_8_IPU();
+	setPA11_12_OPP();
+	// setPA7_IPU();
+	// setPA6_IPU();
+	// setPA5_IPU();
+	// setPA4_IPU();
 	setPB0_7_OPP();
 	setPB10_11_OPP();
-	setPA11_12_OPP();
 	setPB14_15_OPP();
 	// Initialize the alternative functions.
 	EXTIInit();
@@ -124,7 +137,7 @@ int main(void)
 	k_dp = 6;
 	length = 0;
 	averlength = 0;
-
+	GPIO_ResetBits(GPIOB,GPIO_Pin_4);
   /* Infinite loop */
 	  while (1){
 		isalive++;
@@ -146,6 +159,8 @@ int main(void)
 			averlength = CalAverageLength(averirs);
 		}
 
+		BT_Update();
+
 		if(auto_manual){// At manual mode.
 			// k_up = Getk_up();
 			// k_dp = Getk_dp();
@@ -161,9 +176,9 @@ int main(void)
 		else{// At automatic mode.
 			adjustLengthImpluse = (averlength - 26) * 250;
 			// openLengthImpluse = 4500 - k * averlux * 208;
-			openLengthImpluse = 3750 - k * averlux * 61;
-			if(openLengthImpluse > 3750){
-				openLengthImpluse = 3750;
+			openLengthImpluse = 21000 - k * averlux * 972;
+			if(openLengthImpluse > 21000){
+				openLengthImpluse = 21000;
 			}
 			if(openLengthImpluse < 0){
 				openLengthImpluse = 0;
@@ -171,8 +186,8 @@ int main(void)
 			// if(count > 4500){
 			// 	count = 4500;
 			// }
-			if(count > 3750){
-				count = 3750;
+			if(count > 21000){
+				count = 21000;
 			}
 			if(count < 0){
 				count = 0;
@@ -180,11 +195,11 @@ int main(void)
 
 			if(!isadjust){// Do not need to adjust.
 				if(openLengthImpluse - 400 > count){
-					MotorOpen(10);
+					MotorOpen(100);
 				}
 				else{
 					if(count - 400 > openLengthImpluse){
-						MotorClose(10);
+						MotorClose(100);
 					}
 					else{
 						LEDSD_CLEAR();
@@ -204,7 +219,6 @@ int main(void)
 				}
 				isadjust = 0;
 			}
-			// TIM2_TIM3_PWM(1000,10);
 		}
 	}// while(1)
 }
