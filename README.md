@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #Automatic-Curtain-Control
 
 ## How to use
@@ -15,3 +16,7 @@
 ## Copyright
 
 Closed-Source `Temporarily`
+=======
+# Automatic-Curtain-Control
+Problem D of Competition for Electronic Design
+>>>>>>> fd72ceb438dfde43c2b1dd66430900ef1eecba02
